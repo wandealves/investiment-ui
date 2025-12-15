@@ -1,4 +1,4 @@
-import { TipoAtivo, TipoTransacao } from './entities.types'
+import { TipoTransacao } from './entities.types'
 
 // Auth DTOs
 export interface LoginDto {
@@ -44,40 +44,36 @@ export interface CarteiraResponseDto {
 
 // Ativo DTOs
 export interface CreateAtivoDto {
-  ticker: string
+  codigo: string
   nome: string
-  tipo: TipoAtivo
-  setor?: string
+  tipo: string
   descricao?: string
 }
 
 export interface UpdateAtivoDto {
-  ticker?: string
+  codigo?: string
   nome?: string
-  tipo?: TipoAtivo
-  setor?: string
+  tipo?: string
   descricao?: string
 }
 
 // Transação DTOs
 export interface CreateTransacaoDto {
-  carteiraId: string
-  ativoId: string
-  tipo: TipoTransacao
+  carteiraId: number
+  ativoId: number
+  tipoTransacao: string
   quantidade: number
   preco: number
-  taxas?: number
-  data: string
-  observacoes?: string
+  dataTransacao: string
 }
 
 export interface UpdateTransacaoDto {
-  tipo?: TipoTransacao
+  carteiraId?: number
+  ativoId?: number
+  tipoTransacao?: string
   quantidade?: number
   preco?: number
-  taxas?: number
-  data?: string
-  observacoes?: string
+  dataTransacao?: string
 }
 
 // Relatório DTOs

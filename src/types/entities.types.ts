@@ -7,58 +7,54 @@ export interface Usuario {
 }
 
 export interface Carteira {
-  id: string
+  id: number
   usuarioId: string
   nome: string
   descricao?: string
   valorTotal: number
   rentabilidade: number
-  dataCriacao: string
-  dataAtualizacao?: string
+  criadaEm: string
+  totalAtivos?: number
+  totalTransacoes?: number
   ativos?: CarteiraAtivo[]
 }
 
 export interface Ativo {
-  id: string
-  ticker: string
+  id: number
+  codigo: string
   nome: string
-  tipo: TipoAtivo
-  setor?: string
+  tipo: string
   descricao?: string
-  dataCriacao: string
-  dataAtualizacao?: string
 }
 
 export interface CarteiraAtivo {
-  id: string
-  carteiraId: string
-  ativoId: string
-  ativo: Ativo
-  quantidade: number
+  ativoId: number
+  ativoNome: string
+  ativoCodigo: string
+  ativoTipo: string
+  quantidadeAtual: number
   precoMedio: number
   valorInvestido: number
-  valorAtual: number
-  rentabilidade: number
-  percentualCarteira: number
-  dataCriacao: string
-  dataAtualizacao?: string
+  precoAtual?: number
+  valorAtual?: number
+  lucro?: number
+  rentabilidade?: number
+  dividendosRecebidos: number
+  dataPrimeiraCompra?: string
+  dataUltimaTransacao?: string
 }
 
 export interface Transacao {
   id: string
-  carteiraId: string
-  ativoId: string
-  ativo?: Ativo
-  tipo: TipoTransacao
+  carteiraId: number
+  ativoId: number
+  ativoNome?: string
+  ativoCodigo?: string
   quantidade: number
   preco: number
-  valor: number
-  taxas?: number
-  data: string
-  observacoes?: string
-  dataCriacao: string
+  valorTotal: number
+  tipoTransacao: string
+  dataTransacao: string
 }
 
-export type TipoAtivo = 'ACAO' | 'FII' | 'RENDA_FIXA' | 'CRIPTO' | 'OUTRO'
-
-export type TipoTransacao = 'COMPRA' | 'VENDA' | 'DIVIDENDO' | 'JCP' | 'SPLIT'
+export type TipoTransacao = 'Compra' | 'Venda' | 'Dividendo' | 'JCP' | 'Bonus' | 'Split' | 'Grupamento'

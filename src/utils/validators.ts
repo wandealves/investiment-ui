@@ -15,7 +15,7 @@ export const isValidCNPJ = (cnpj: string): boolean => {
   return cnpj.length === 14
 }
 
-export const isValidTicker = (ticker: string): boolean => {
-  // Validate stock ticker format
-  return /^[A-Z]{4}[0-9]{1,2}$/.test(ticker)
+export const isValidCodigo = (codigo: string): boolean => {
+  // Validate stock code format
+  return /^[A-Z]{4}[0-9]{1,2}$/.test(codigo)
 }

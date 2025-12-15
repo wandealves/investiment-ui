@@ -73,21 +73,21 @@ const CarteiraDetalhes = () => {
             <div className="space-y-4">
               {ativos.map((item) => (
                 <div
-                  key={item.id}
+                  key={item.ativoId}
                   className="flex items-center justify-between p-4 rounded-lg border"
                 >
                   <div>
-                    <p className="font-semibold">{item.ativo.ticker}</p>
+                    <p className="font-semibold">{item.ativoCodigo}</p>
                     <p className="text-sm text-muted-foreground">
-                      {item.ativo.nome}
+                      {item.ativoNome}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">
-                      {formatCurrency(item.valorAtual)}
+                      {formatCurrency(item.valorAtual || 0)}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Quantidade: {item.quantidade}
+                      Quantidade: {item.quantidadeAtual}
                     </p>
                   </div>
                 </div>

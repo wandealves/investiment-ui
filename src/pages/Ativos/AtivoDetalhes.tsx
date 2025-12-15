@@ -21,7 +21,7 @@ const AtivoDetalhes = () => {
   return (
     <div className="space-y-6">
       <PageHeader
-        title={ativo.ticker}
+        title={ativo.codigo}
         description={ativo.nome}
         action={
           <Button variant="outline" onClick={() => navigate('/ativos')}>
@@ -38,12 +38,6 @@ const AtivoDetalhes = () => {
             <p className="text-sm text-muted-foreground">Tipo</p>
             <p className="font-semibold">{ativo.tipo}</p>
           </div>
-          {ativo.setor && (
-            <div>
-              <p className="text-sm text-muted-foreground">Setor</p>
-              <p className="font-semibold">{ativo.setor}</p>
-            </div>
-          )}
           {ativo.descricao && (
             <div>
               <p className="text-sm text-muted-foreground">Descrição</p>

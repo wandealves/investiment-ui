@@ -1,19 +1,10 @@
 import { useCallback } from 'react'
+import { toast as sonnerToast } from 'sonner'
 
-// Simplified toast implementation
 export const toast = {
-  success: (message: string) => {
-    console.log('✅ Success:', message)
-    // TODO: Implementar com biblioteca (sonner ou react-hot-toast)
-  },
-  error: (message: string) => {
-    console.error('❌ Error:', message)
-    // TODO: Implementar com biblioteca
-  },
-  info: (message: string) => {
-    console.info('ℹ️ Info:', message)
-    // TODO: Implementar com biblioteca
-  },
+  success: (message: string) => sonnerToast.success(message),
+  error: (message: string) => sonnerToast.error(message),
+  info: (message: string) => sonnerToast.info(message),
 }
 
 export const useToast = () => {

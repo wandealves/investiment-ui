@@ -1,40 +1,27 @@
 import { useQuery } from '@tanstack/react-query'
-import { ApiClient } from '@/api/client'
 import { queryKeys } from '@/lib/react-query'
-import { AlocacaoData, EvolucaoPatrimonioData } from '@/types'
-
-export interface DashboardMetrics {
-  patrimonioTotal: number
-  rentabilidadeTotal: number
-  quantidadeCarteiras: number
-  quantidadeAtivos: number
-  melhorAtivo: {
-    ticker: string
-    rentabilidade: number
-  }
-  piorAtivo: {
-    ticker: string
-    rentabilidade: number
-  }
-}
+import { dashboardEndpoints, DashboardMetrics, AlocacaoData, EvolucaoPatrimonioData } from '@/api/endpoints/dashboard'
 
 export const useDashboardData = () => {
   return useQuery({
     queryKey: queryKeys.dashboard.metrics,
-    queryFn: () => ApiClient.get<DashboardMetrics>('/dashboard/metrics'),
+    queryFn: dashboardEndpoints.getMetrics,
   })
 }
 
 export const useAlocacaoData = () => {
   return useQuery({
     queryKey: queryKeys.dashboard.alocacao,
-    queryFn: () => ApiClient.get<AlocacaoData[]>('/dashboard/alocacao'),
+    queryFn: dashboardEndpoints.getAlocacao,
   })
 }
 
 export const useEvolucaoData = () => {
   return useQuery({
     queryKey: queryKeys.dashboard.evolucao,
-    queryFn: () => ApiClient.get<EvolucaoPatrimonioData[]>('/dashboard/evolucao'),
+    queryFn: dashboardEndpoints.getEvolucao,
   })
 }
+
+// Re-export types for convenience
+export type { DashboardMetrics, AlocacaoData, EvolucaoPatrimonioData }

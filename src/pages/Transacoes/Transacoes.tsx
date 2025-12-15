@@ -51,21 +51,21 @@ const Transacoes = () => {
               <tbody>
                 {transacoes.map((transacao) => (
                   <tr key={transacao.id} className="border-b hover:bg-muted/50">
-                    <td className="p-4">{formatDate(transacao.data)}</td>
+                    <td className="p-4">{formatDate(transacao.dataTransacao)}</td>
                     <td className="p-4">
                       <span className="px-2 py-1 rounded-full bg-primary/10 text-primary text-xs">
-                        {transacao.tipo}
+                        {transacao.tipoTransacao}
                       </span>
                     </td>
                     <td className="p-4 font-semibold">
-                      {transacao.ativo?.ticker || '-'}
+                      {transacao.ativoCodigo || '-'}
                     </td>
                     <td className="p-4 text-right">{transacao.quantidade}</td>
                     <td className="p-4 text-right">
                       {formatCurrency(transacao.preco)}
                     </td>
                     <td className="p-4 text-right font-semibold">
-                      {formatCurrency(transacao.valor)}
+                      {formatCurrency(transacao.valorTotal)}
                     </td>
                   </tr>
                 ))}

@@ -13,7 +13,7 @@ export interface ChartDataset {
 
 export interface AlocacaoData {
   ativo: string
-  ticker: string
+  codigo: string
   valor: number
   percentual: number
   cor: string
@@ -26,7 +26,7 @@ export interface EvolucaoPatrimonioData {
 }
 
 export interface RentabilidadePorAtivoData {
-  ticker: string
+  codigo: string
   nome: string
   rentabilidade: number
   valorInvestido: number

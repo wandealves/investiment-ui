@@ -39,24 +39,20 @@ const Ativos = () => {
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left p-4">Ticker</th>
+                  <th className="text-left p-4">Código</th>
                   <th className="text-left p-4">Nome</th>
                   <th className="text-left p-4">Tipo</th>
-                  <th className="text-left p-4">Setor</th>
                 </tr>
               </thead>
               <tbody>
                 {ativos.map((ativo) => (
                   <tr key={ativo.id} className="border-b hover:bg-muted/50">
-                    <td className="p-4 font-semibold">{ativo.ticker}</td>
+                    <td className="p-4 font-semibold">{ativo.codigo}</td>
                     <td className="p-4">{ativo.nome}</td>
                     <td className="p-4">
                       <span className="px-2 py-1 rounded-full bg-primary/10 text-primary text-xs">
                         {ativo.tipo}
                       </span>
-                    </td>
-                    <td className="p-4 text-muted-foreground">
-                      {ativo.setor || '-'}
                     </td>
                   </tr>
                 ))}

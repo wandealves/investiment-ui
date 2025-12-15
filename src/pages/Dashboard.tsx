@@ -61,12 +61,12 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {metrics && (
+      {metrics && metrics.melhorAtivo && metrics.piorAtivo && (
         <div className="grid gap-4 md:grid-cols-2">
           <div className="rounded-lg border bg-card p-6">
             <h3 className="text-lg font-semibold mb-2">Melhor Ativo</h3>
             <p className="text-2xl font-bold text-green-600">
-              {metrics.melhorAtivo.ticker}
+              {metrics.melhorAtivo.codigo}
             </p>
             <p className="text-sm text-muted-foreground">
               +{metrics.melhorAtivo.rentabilidade.toFixed(2)}%
@@ -76,7 +76,7 @@ const Dashboard = () => {
           <div className="rounded-lg border bg-card p-6">
             <h3 className="text-lg font-semibold mb-2">Pior Ativo</h3>
             <p className="text-2xl font-bold text-red-600">
-              {metrics.piorAtivo.ticker}
+              {metrics.piorAtivo.codigo}
             </p>
             <p className="text-sm text-muted-foreground">
               {metrics.piorAtivo.rentabilidade.toFixed(2)}%
