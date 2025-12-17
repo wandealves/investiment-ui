@@ -10,6 +10,12 @@ export interface ApiError {
   statusCode: number
 }
 
+// Formato real retornado pela API
+export interface ApiPaginatedResponse<T> {
+  count: number
+  data: T[]
+}
+
 export interface PaginatedResponse<T> {
   data: T[]
   total: number
