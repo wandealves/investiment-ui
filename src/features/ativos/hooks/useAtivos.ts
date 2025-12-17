@@ -3,11 +3,12 @@ import { ativosEndpoints } from '@/api/endpoints/ativos'
 import { queryKeys } from '@/lib/react-query'
 import { toast } from '@/hooks/useToast'
 import { CreateAtivoDto, UpdateAtivoDto } from '@/types'
+import { PaginationParams } from '@/types/api.types'
 
-export const useAtivos = () => {
+export const useAtivos = (params?: PaginationParams) => {
   return useQuery({
-    queryKey: queryKeys.ativos.all,
-    queryFn: ativosEndpoints.getAll,
+    queryKey: queryKeys.ativos.list(params),
+    queryFn: () => ativosEndpoints.getAll(params),
   })
 }
 
@@ -19,10 +20,10 @@ export const useAtivo = (id: string) => {
   })
 }
 
-export const useSearchAtivos = (query: string) => {
+export const useSearchAtivos = (query: string, params?: PaginationParams) => {
   return useQuery({
-    queryKey: queryKeys.ativos.search(query),
-    queryFn: () => ativosEndpoints.search(query),
+    queryKey: queryKeys.ativos.search(query, params),
+    queryFn: () => ativosEndpoints.search(query, params),
     enabled: query.length > 0,
   })
 }
@@ -33,7 +34,7 @@ export const useCreateAtivo = () => {
   return useMutation({
     mutationFn: (data: CreateAtivoDto) => ativosEndpoints.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.ativos.all })
+      queryClient.invalidateQueries({ queryKey: ['ativos'] })
       toast.success('Ativo criado com sucesso!')
     },
     onError: (error: any) => {
@@ -49,7 +50,7 @@ export const useUpdateAtivo = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateAtivoDto }) =>
       ativosEndpoints.update(id, data),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.ativos.all })
+      queryClient.invalidateQueries({ queryKey: ['ativos'] })
       queryClient.invalidateQueries({ queryKey: queryKeys.ativos.detail(variables.id) })
       toast.success('Ativo atualizado com sucesso!')
     },
@@ -65,7 +66,7 @@ export const useDeleteAtivo = () => {
   return useMutation({
     mutationFn: (id: string) => ativosEndpoints.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.ativos.all })
+      queryClient.invalidateQueries({ queryKey: ['ativos'] })
       toast.success('Ativo excluído com sucesso!')
     },
     onError: (error: any) => {

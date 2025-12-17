@@ -3,18 +3,22 @@ import { transacoesEndpoints } from '@/api/endpoints/transacoes'
 import { queryKeys } from '@/lib/react-query'
 import { toast } from '@/hooks/useToast'
 import { CreateTransacaoDto } from '@/types'
+import { PaginationParams } from '@/types/api.types'
 
-export const useTransacoes = () => {
+export const useTransacoes = (params?: PaginationParams) => {
   return useQuery({
-    queryKey: queryKeys.transacoes.all,
-    queryFn: transacoesEndpoints.getAll,
+    queryKey: queryKeys.transacoes.list(params),
+    queryFn: () => transacoesEndpoints.getAll(params),
   })
 }
 
-export const useTransacoesByCarteira = (carteiraId: string) => {
+export const useTransacoesByCarteira = (
+  carteiraId: string,
+  params?: PaginationParams
+) => {
   return useQuery({
-    queryKey: queryKeys.transacoes.byCarteira(carteiraId),
-    queryFn: () => transacoesEndpoints.getByCarteira(carteiraId),
+    queryKey: queryKeys.transacoes.byCarteira(carteiraId, params),
+    queryFn: () => transacoesEndpoints.getByCarteira(carteiraId, params),
     enabled: !!carteiraId,
   })
 }
@@ -25,8 +29,9 @@ export const useCreateTransacao = () => {
   return useMutation({
     mutationFn: (data: CreateTransacaoDto) => transacoesEndpoints.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.transacoes.all })
-      queryClient.invalidateQueries({ queryKey: queryKeys.carteiras.all })
+      queryClient.invalidateQueries({ queryKey: ['transacoes'] })
+      queryClient.invalidateQueries({ queryKey: ['carteiras'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
       toast.success('Transação criada com sucesso!')
     },
     onError: (error: any) => {
@@ -41,8 +46,9 @@ export const useDeleteTransacao = () => {
   return useMutation({
     mutationFn: (id: string) => transacoesEndpoints.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.transacoes.all })
-      queryClient.invalidateQueries({ queryKey: queryKeys.carteiras.all })
+      queryClient.invalidateQueries({ queryKey: ['transacoes'] })
+      queryClient.invalidateQueries({ queryKey: ['carteiras'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
       toast.success('Transação excluída com sucesso!')
     },
     onError: (error: any) => {

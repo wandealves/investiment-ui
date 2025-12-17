@@ -3,10 +3,25 @@ import { useAtivos } from '@/features/ativos/hooks/useAtivos'
 import PageHeader from '@/components/common/PageHeader'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import EmptyState from '@/components/common/EmptyState'
+import Pagination from '@/components/common/Pagination'
 import { Button } from '@/components/ui/button'
+import { usePagination } from '@/hooks/usePagination'
+import { cn } from '@/lib/utils'
 
 const Ativos = () => {
-  const { data: ativos, isLoading } = useAtivos()
+  const { currentPage, pageSize, goToPage, setPageSize } = usePagination({
+    initialPage: 1,
+    initialPageSize: 20,
+    storageKey: 'pagination-ativos',
+  })
+
+  const { data, isLoading, isFetching } = useAtivos({
+    page: currentPage,
+    pageSize: pageSize,
+  })
+
+  const ativos = data?.data || []
+  const totalItems = data?.total || 0
 
   if (isLoading) {
     return <LoadingSpinner />
@@ -25,7 +40,7 @@ const Ativos = () => {
         }
       />
 
-      {!ativos || ativos.length === 0 ? (
+      {totalItems === 0 ? (
         <EmptyState
           icon={TrendingUp}
           title="Nenhum ativo encontrado"
@@ -34,41 +49,60 @@ const Ativos = () => {
           onAction={() => console.log('Adicionar ativo')}
         />
       ) : (
-        <div className="rounded-lg border bg-card overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b bg-muted/30">
-                  <th className="text-left p-4 text-sm font-semibold">Código</th>
-                  <th className="text-left p-4 text-sm font-semibold">Nome</th>
-                  <th className="text-left p-4 text-sm font-semibold">Tipo</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ativos.map((ativo, index) => (
-                  <tr
-                    key={ativo.id}
-                    className="group border-b last:border-b-0 transition-all duration-300 hover:bg-primary/5 hover:shadow-[inset_3px_0_0_0] hover:shadow-primary cursor-pointer animate-fade-in"
-                    style={{
-                      animationDelay: `${index * 50}ms`,
-                      animationFillMode: 'backwards',
-                    }}
-                  >
-                    <td className="p-4 font-semibold group-hover:text-primary transition-colors duration-300">
-                      {ativo.codigo}
-                    </td>
-                    <td className="p-4">{ativo.nome}</td>
-                    <td className="p-4">
-                      <span className="px-2 py-1 rounded-full bg-primary/10 text-primary text-xs group-hover:bg-primary/20 transition-colors duration-300">
-                        {ativo.tipo}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <>
+          <div className={cn('relative', isFetching && 'opacity-60 pointer-events-none')}>
+            {isFetching && (
+              <div className="absolute top-4 right-4 z-10">
+                <LoadingSpinner size="sm" />
+              </div>
+            )}
+            <div className="rounded-lg border bg-card overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b bg-muted/30">
+                      <th className="text-left p-4 text-sm font-semibold">Código</th>
+                      <th className="text-left p-4 text-sm font-semibold">Nome</th>
+                      <th className="text-left p-4 text-sm font-semibold">Tipo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ativos.map((ativo, index) => (
+                      <tr
+                        key={ativo.id}
+                        className="group border-b last:border-b-0 transition-all duration-300 hover:bg-primary/5 hover:shadow-[inset_3px_0_0_0] hover:shadow-primary cursor-pointer animate-fade-in"
+                        style={{
+                          animationDelay: `${index * 50}ms`,
+                          animationFillMode: 'backwards',
+                        }}
+                      >
+                        <td className="p-4 font-semibold group-hover:text-primary transition-colors duration-300">
+                          {ativo.codigo}
+                        </td>
+                        <td className="p-4">{ativo.nome}</td>
+                        <td className="p-4">
+                          <span className="px-2 py-1 rounded-full bg-primary/10 text-primary text-xs group-hover:bg-primary/20 transition-colors duration-300">
+                            {ativo.tipo}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
-        </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={data?.totalPages || 1}
+            totalItems={totalItems}
+            pageSize={pageSize}
+            onPageChange={goToPage}
+            onPageSizeChange={setPageSize}
+            pageSizeOptions={[10, 20, 50, 100]}
+          />
+        </>
       )}
     </div>
   )

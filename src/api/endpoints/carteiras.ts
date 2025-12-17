@@ -5,9 +5,16 @@ import {
   UpdateCarteiraDto,
   CarteiraAtivo,
 } from '@/types'
+import { PaginationParams, PaginatedResponse } from '@/types/api.types'
 
 export const carteirasEndpoints = {
-  getAll: () => ApiClient.get<Carteira[]>('/api/v1/carteiras'),
+  getAll: (params?: PaginationParams) =>
+    ApiClient.get<PaginatedResponse<Carteira>>('/api/v1/carteiras', {
+      params: {
+        Page: params?.page || 1,
+        PageSize: params?.pageSize || 20,
+      },
+    }),
 
   getById: (id: string) => ApiClient.get<Carteira>(`/carteiras/${id}`),
 

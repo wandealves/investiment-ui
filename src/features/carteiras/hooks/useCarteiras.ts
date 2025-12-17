@@ -3,11 +3,12 @@ import { carteirasEndpoints } from '@/api/endpoints/carteiras'
 import { queryKeys } from '@/lib/react-query'
 import { toast } from '@/hooks/useToast'
 import { CreateCarteiraDto, UpdateCarteiraDto } from '@/types'
+import { PaginationParams } from '@/types/api.types'
 
-export const useCarteiras = () => {
+export const useCarteiras = (params?: PaginationParams) => {
   return useQuery({
-    queryKey: queryKeys.carteiras.all,
-    queryFn: carteirasEndpoints.getAll,
+    queryKey: queryKeys.carteiras.list(params),
+    queryFn: () => carteirasEndpoints.getAll(params),
   })
 }
 
@@ -33,7 +34,7 @@ export const useCreateCarteira = () => {
   return useMutation({
     mutationFn: (data: CreateCarteiraDto) => carteirasEndpoints.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.carteiras.all })
+      queryClient.invalidateQueries({ queryKey: ['carteiras'] })
       toast.success('Carteira criada com sucesso!')
     },
     onError: (error: any) => {
@@ -49,7 +50,7 @@ export const useUpdateCarteira = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateCarteiraDto }) =>
       carteirasEndpoints.update(id, data),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.carteiras.all })
+      queryClient.invalidateQueries({ queryKey: ['carteiras'] })
       queryClient.invalidateQueries({ queryKey: queryKeys.carteiras.detail(variables.id) })
       toast.success('Carteira atualizada com sucesso!')
     },
@@ -65,7 +66,7 @@ export const useDeleteCarteira = () => {
   return useMutation({
     mutationFn: (id: string) => carteirasEndpoints.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.carteiras.all })
+      queryClient.invalidateQueries({ queryKey: ['carteiras'] })
       toast.success('Carteira excluída com sucesso!')
     },
     onError: (error: any) => {

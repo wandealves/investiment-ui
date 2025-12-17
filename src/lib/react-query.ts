@@ -1,4 +1,5 @@
 import { QueryClient } from '@tanstack/react-query'
+import { PaginationParams } from '@/types/api.types'
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,17 +17,22 @@ export const queryKeys = {
   },
   carteiras: {
     all: ['carteiras'] as const,
+    list: (params?: PaginationParams) => ['carteiras', 'list', params] as const,
     detail: (id: string) => ['carteiras', id] as const,
     ativos: (id: string) => ['carteiras', id, 'ativos'] as const,
   },
   ativos: {
     all: ['ativos'] as const,
+    list: (params?: PaginationParams) => ['ativos', 'list', params] as const,
     detail: (id: string) => ['ativos', id] as const,
-    search: (query: string) => ['ativos', 'search', query] as const,
+    search: (query: string, params?: PaginationParams) =>
+      ['ativos', 'search', query, params] as const,
   },
   transacoes: {
     all: ['transacoes'] as const,
-    byCarteira: (carteiraId: string) => ['transacoes', 'carteira', carteiraId] as const,
+    list: (params?: PaginationParams) => ['transacoes', 'list', params] as const,
+    byCarteira: (carteiraId: string, params?: PaginationParams) =>
+      ['transacoes', 'carteira', carteiraId, params] as const,
     byAtivo: (ativoId: string) => ['transacoes', 'ativo', ativoId] as const,
   },
   relatorios: {
