@@ -36,8 +36,17 @@ const Carteiras = () => {
         />
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {carteiras.map((carteira) => (
-            <CarteiraCard key={carteira.id} carteira={carteira} />
+          {carteiras.map((carteira, index) => (
+            <div
+              key={carteira.id}
+              className="animate-fade-in"
+              style={{
+                animationDelay: `${index * 100}ms`,
+                animationFillMode: 'backwards',
+              }}
+            >
+              <CarteiraCard carteira={carteira} />
+            </div>
           ))}
         </div>
       )}

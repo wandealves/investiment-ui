@@ -44,7 +44,8 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
   return (
     <aside
       className={cn(
-        'fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] w-64 border-r bg-background transition-transform duration-300',
+        'fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] w-64 border-r bg-background/95 backdrop-blur-sm',
+        'transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]',
         isOpen ? 'translate-x-0' : '-translate-x-full'
       )}
     >
@@ -56,15 +57,29 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
             end={item.path === '/'}
             className={({ isActive }) =>
               cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                'group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium overflow-hidden',
+                'transition-all duration-300',
                 isActive
-                  ? 'bg-primary text-primary-foreground'
+                  ? 'bg-gradient-to-r from-primary to-primary/90 text-primary-foreground shadow-md'
                   : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
               )
             }
           >
-            <item.icon className="h-5 w-5" />
-            {item.title}
+            {({ isActive }) => (
+              <>
+                {/* Hover gradient effect for non-active items */}
+                {!isActive && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                )}
+                <item.icon
+                  className={cn(
+                    'h-5 w-5 relative z-10 transition-transform duration-300',
+                    'group-hover:scale-110'
+                  )}
+                />
+                <span className="relative z-10">{item.title}</span>
+              </>
+            )}
           </NavLink>
         ))}
       </nav>

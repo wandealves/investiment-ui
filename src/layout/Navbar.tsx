@@ -3,6 +3,8 @@ import { useAuthStore } from '@/store'
 import { useLogout } from '@/features/auth/hooks/useLogout'
 import ThemeToggle from '@/components/common/ThemeToggle'
 import { Button } from '@/components/ui/button'
+import { useScrollDirection } from '@/hooks/useScrollDirection'
+import { cn } from '@/lib/utils'
 
 interface NavbarProps {
   onToggleSidebar: () => void
@@ -11,9 +13,15 @@ interface NavbarProps {
 const Navbar = ({ onToggleSidebar }: NavbarProps) => {
   const user = useAuthStore((state) => state.user)
   const { mutate: logout } = useLogout()
+  const scrollDirection = useScrollDirection()
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav
+      className={cn(
+        'sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-transform duration-300',
+        scrollDirection === 'down' ? '-translate-y-full' : 'translate-y-0'
+      )}
+    >
       <div className="flex h-16 items-center px-4">
         <Button
           variant="ghost"

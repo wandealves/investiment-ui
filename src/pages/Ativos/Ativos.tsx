@@ -34,23 +34,32 @@ const Ativos = () => {
           onAction={() => console.log('Adicionar ativo')}
         />
       ) : (
-        <div className="rounded-lg border bg-card">
+        <div className="rounded-lg border bg-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b">
-                  <th className="text-left p-4">Código</th>
-                  <th className="text-left p-4">Nome</th>
-                  <th className="text-left p-4">Tipo</th>
+                <tr className="border-b bg-muted/30">
+                  <th className="text-left p-4 text-sm font-semibold">Código</th>
+                  <th className="text-left p-4 text-sm font-semibold">Nome</th>
+                  <th className="text-left p-4 text-sm font-semibold">Tipo</th>
                 </tr>
               </thead>
               <tbody>
-                {ativos.map((ativo) => (
-                  <tr key={ativo.id} className="border-b hover:bg-muted/50">
-                    <td className="p-4 font-semibold">{ativo.codigo}</td>
+                {ativos.map((ativo, index) => (
+                  <tr
+                    key={ativo.id}
+                    className="group border-b last:border-b-0 transition-all duration-300 hover:bg-primary/5 hover:shadow-[inset_3px_0_0_0] hover:shadow-primary cursor-pointer animate-fade-in"
+                    style={{
+                      animationDelay: `${index * 50}ms`,
+                      animationFillMode: 'backwards',
+                    }}
+                  >
+                    <td className="p-4 font-semibold group-hover:text-primary transition-colors duration-300">
+                      {ativo.codigo}
+                    </td>
                     <td className="p-4">{ativo.nome}</td>
                     <td className="p-4">
-                      <span className="px-2 py-1 rounded-full bg-primary/10 text-primary text-xs">
+                      <span className="px-2 py-1 rounded-full bg-primary/10 text-primary text-xs group-hover:bg-primary/20 transition-colors duration-300">
                         {ativo.tipo}
                       </span>
                     </td>

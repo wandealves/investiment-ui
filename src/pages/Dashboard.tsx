@@ -13,13 +13,16 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      {/* Subtle gradient background */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/5 via-background to-background opacity-50" />
+
       <PageHeader
         title="Dashboard"
         description="Visão geral dos seus investimentos"
       />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 animate-fade-in">
         <MetricCard
           title="Patrimônio Total"
           value={formatCurrency(metrics?.patrimonioTotal || 0)}
@@ -44,18 +47,18 @@ const Dashboard = () => {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-lg border bg-card p-6">
+        <div className="group rounded-lg border bg-card p-6 transition-all duration-300 hover:shadow-lg hover:border-primary/50">
           <h3 className="text-lg font-semibold mb-4">Alocação por Ativo</h3>
-          <div className="flex items-center justify-center h-64 text-muted-foreground">
+          <div className="flex items-center justify-center h-64 text-muted-foreground bg-muted/20 rounded-lg border-2 border-dashed border-muted">
             <p>Gráfico de alocação (implementar Chart.js)</p>
           </div>
         </div>
 
-        <div className="rounded-lg border bg-card p-6">
+        <div className="group rounded-lg border bg-card p-6 transition-all duration-300 hover:shadow-lg hover:border-primary/50">
           <h3 className="text-lg font-semibold mb-4">
             Evolução do Patrimônio
           </h3>
-          <div className="flex items-center justify-center h-64 text-muted-foreground">
+          <div className="flex items-center justify-center h-64 text-muted-foreground bg-muted/20 rounded-lg border-2 border-dashed border-muted">
             <p>Gráfico de evolução (implementar Chart.js)</p>
           </div>
         </div>
@@ -63,24 +66,30 @@ const Dashboard = () => {
 
       {metrics && metrics.melhorAtivo && metrics.piorAtivo && (
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-lg border bg-card p-6">
-            <h3 className="text-lg font-semibold mb-2">Melhor Ativo</h3>
-            <p className="text-2xl font-bold text-green-600">
-              {metrics.melhorAtivo.codigo}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              +{metrics.melhorAtivo.rentabilidade.toFixed(2)}%
-            </p>
+          <div className="group relative overflow-hidden rounded-lg border bg-card p-6 transition-all duration-300 hover:shadow-lg hover:border-green-500/50">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="relative">
+              <h3 className="text-lg font-semibold mb-2">Melhor Ativo</h3>
+              <p className="text-2xl font-bold text-green-600 dark:text-green-500">
+                {metrics.melhorAtivo.codigo}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                +{metrics.melhorAtivo.rentabilidade.toFixed(2)}%
+              </p>
+            </div>
           </div>
 
-          <div className="rounded-lg border bg-card p-6">
-            <h3 className="text-lg font-semibold mb-2">Pior Ativo</h3>
-            <p className="text-2xl font-bold text-red-600">
-              {metrics.piorAtivo.codigo}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {metrics.piorAtivo.rentabilidade.toFixed(2)}%
-            </p>
+          <div className="group relative overflow-hidden rounded-lg border bg-card p-6 transition-all duration-300 hover:shadow-lg hover:border-red-500/50">
+            <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="relative">
+              <h3 className="text-lg font-semibold mb-2">Pior Ativo</h3>
+              <p className="text-2xl font-bold text-red-600 dark:text-red-500">
+                {metrics.piorAtivo.codigo}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {metrics.piorAtivo.rentabilidade.toFixed(2)}%
+              </p>
+            </div>
           </div>
         </div>
       )}

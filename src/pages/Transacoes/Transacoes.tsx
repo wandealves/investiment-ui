@@ -35,29 +35,36 @@ const Transacoes = () => {
           onAction={() => console.log('Adicionar transação')}
         />
       ) : (
-        <div className="rounded-lg border bg-card">
+        <div className="rounded-lg border bg-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b">
-                  <th className="text-left p-4">Data</th>
-                  <th className="text-left p-4">Tipo</th>
-                  <th className="text-left p-4">Ativo</th>
-                  <th className="text-right p-4">Quantidade</th>
-                  <th className="text-right p-4">Preço</th>
-                  <th className="text-right p-4">Valor Total</th>
+                <tr className="border-b bg-muted/30">
+                  <th className="text-left p-4 text-sm font-semibold">Data</th>
+                  <th className="text-left p-4 text-sm font-semibold">Tipo</th>
+                  <th className="text-left p-4 text-sm font-semibold">Ativo</th>
+                  <th className="text-right p-4 text-sm font-semibold">Quantidade</th>
+                  <th className="text-right p-4 text-sm font-semibold">Preço</th>
+                  <th className="text-right p-4 text-sm font-semibold">Valor Total</th>
                 </tr>
               </thead>
               <tbody>
-                {transacoes.map((transacao) => (
-                  <tr key={transacao.id} className="border-b hover:bg-muted/50">
+                {transacoes.map((transacao, index) => (
+                  <tr
+                    key={transacao.id}
+                    className="group border-b last:border-b-0 transition-all duration-300 hover:bg-primary/5 hover:shadow-[inset_3px_0_0_0] hover:shadow-primary cursor-pointer animate-fade-in"
+                    style={{
+                      animationDelay: `${index * 30}ms`,
+                      animationFillMode: 'backwards',
+                    }}
+                  >
                     <td className="p-4">{formatDate(transacao.dataTransacao)}</td>
                     <td className="p-4">
-                      <span className="px-2 py-1 rounded-full bg-primary/10 text-primary text-xs">
+                      <span className="px-2 py-1 rounded-full bg-primary/10 text-primary text-xs group-hover:bg-primary/20 transition-colors duration-300">
                         {transacao.tipoTransacao}
                       </span>
                     </td>
-                    <td className="p-4 font-semibold">
+                    <td className="p-4 font-semibold group-hover:text-primary transition-colors duration-300">
                       {transacao.ativoCodigo || '-'}
                     </td>
                     <td className="p-4 text-right">{transacao.quantidade}</td>
