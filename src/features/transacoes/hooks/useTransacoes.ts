@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { transacoesEndpoints } from '@/api/endpoints/transacoes'
 import { queryKeys } from '@/lib/react-query'
 import { toast } from '@/hooks/useToast'
-import { CreateTransacaoDto } from '@/types'
+import { CreateTransacaoDto, UpdateTransacaoDto } from '@/types'
 import { PaginationParams } from '@/types/api.types'
 
 export const useTransacoes = (params?: PaginationParams) => {
@@ -36,6 +36,24 @@ export const useCreateTransacao = () => {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Erro ao criar transação')
+    },
+  })
+}
+
+export const useUpdateTransacao = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateTransacaoDto }) =>
+      transacoesEndpoints.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['transacoes'] })
+      queryClient.invalidateQueries({ queryKey: ['carteiras'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+      toast.success('Transação atualizada com sucesso!')
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Erro ao atualizar transação')
     },
   })
 }

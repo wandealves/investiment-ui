@@ -28,7 +28,7 @@ export const transacoesEndpoints = {
     }
 
     const apiResponse = await ApiClient.get<ApiPaginatedResponse<Transacao>>(
-      '/api/v1/transacoes',
+      'transacoes',
       {
         params: {
           Page: paginationParams.page,
@@ -40,7 +40,7 @@ export const transacoesEndpoints = {
     return adaptPaginatedResponse(apiResponse, paginationParams)
   },
 
-  getById: (id: string) => ApiClient.get<Transacao>(`/transacoes/${id}`),
+  getById: (id: string) => ApiClient.get<Transacao>(`/api/v1/transacoes/${id}`),
 
   getByCarteira: async (
     carteiraId: string,
@@ -52,7 +52,7 @@ export const transacoesEndpoints = {
     }
 
     const apiResponse = await ApiClient.get<ApiPaginatedResponse<Transacao>>(
-      `/transacoes/carteira/${carteiraId}`,
+      `carteiras/${carteiraId}/transacoes`,
       {
         params: {
           Page: paginationParams.page,
@@ -65,10 +65,10 @@ export const transacoesEndpoints = {
   },
 
   create: (data: CreateTransacaoDto) =>
-    ApiClient.post<Transacao>('/api/v1/transacoes', data),
+    ApiClient.post<Transacao>('transacoes', data),
 
   update: (id: string, data: UpdateTransacaoDto) =>
-    ApiClient.put<Transacao>(`/transacoes/${id}`, data),
+    ApiClient.put<Transacao>(`transacoes/${id}`, data),
 
-  delete: (id: string) => ApiClient.delete(`/transacoes/${id}`),
+  delete: (id: string) => ApiClient.delete(`transacoes/${id}`),
 }

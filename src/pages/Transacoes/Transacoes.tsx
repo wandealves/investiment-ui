@@ -1,6 +1,9 @@
-import { Plus, ArrowLeftRight } from 'lucide-react'
+import { Plus, ArrowLeftRight, Pencil, Trash2 } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import { useTransacoes } from '@/features/transacoes/hooks/useTransacoes'
+import TransacaoFormModal from '@/features/transacoes/components/TransacaoFormModal'
+import TransacaoDeleteDialog from '@/features/transacoes/components/TransacaoDeleteDialog'
 import PageHeader from '@/components/common/PageHeader'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import EmptyState from '@/components/common/EmptyState'
@@ -9,11 +12,17 @@ import { Button } from '@/components/ui/button'
 import { formatCurrency, formatDate } from '@/utils/formatters'
 import { usePagination } from '@/hooks/usePagination'
 import { cn } from '@/lib/utils'
+import type { Transacao } from '@/types/entities.types'
 
 const Transacoes = () => {
   // Local state for pagination params to enable proper data fetching
   const [localPage, setLocalPage] = useState(1)
   const [localPageSize, setLocalPageSize] = useState(20)
+
+  // Modal states
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [selectedTransacao, setSelectedTransacao] = useState<Transacao | null>(null)
 
   // Fetch data with local pagination state
   const { data, isLoading, isFetching } = useTransacoes({
@@ -38,6 +47,32 @@ const Transacoes = () => {
     setLocalPageSize(pageSize)
   }, [currentPage, pageSize])
 
+  // Modal handlers
+  const handleCreate = () => {
+    setSelectedTransacao(null)
+    setIsFormModalOpen(true)
+  }
+
+  const handleEdit = (transacao: Transacao) => {
+    setSelectedTransacao(transacao)
+    setIsFormModalOpen(true)
+  }
+
+  const handleDelete = (transacao: Transacao) => {
+    setSelectedTransacao(transacao)
+    setIsDeleteDialogOpen(true)
+  }
+
+  const handleCloseFormModal = () => {
+    setIsFormModalOpen(false)
+    setSelectedTransacao(null)
+  }
+
+  const handleCloseDeleteDialog = () => {
+    setIsDeleteDialogOpen(false)
+    setSelectedTransacao(null)
+  }
+
   if (isLoading) {
     return <LoadingSpinner />
   }
@@ -48,7 +83,7 @@ const Transacoes = () => {
         title="Transações"
         description="Histórico de todas as suas transações"
         action={
-          <Button>
+          <Button onClick={handleCreate}>
             <Plus className="h-4 w-4 mr-2" />
             Nova Transação
           </Button>
@@ -61,7 +96,7 @@ const Transacoes = () => {
           title="Nenhuma transação encontrada"
           description="Registre suas primeiras transações para começar a rastrear seus investimentos"
           actionLabel="Adicionar Transação"
-          onAction={() => console.log('Adicionar transação')}
+          onAction={handleCreate}
         />
       ) : (
         <>
@@ -82,35 +117,83 @@ const Transacoes = () => {
                       <th className="text-right p-4 text-sm font-semibold">Quantidade</th>
                       <th className="text-right p-4 text-sm font-semibold">Preço</th>
                       <th className="text-right p-4 text-sm font-semibold">Valor Total</th>
+                      <th className="text-right p-4 text-sm font-semibold">Ações</th>
                     </tr>
                   </thead>
                   <tbody>
                     {transacoes.map((transacao, index) => (
-                      <tr
+                      <motion.tr
                         key={transacao.id}
-                        className="group border-b last:border-b-0 transition-all duration-300 hover:bg-primary/5 hover:shadow-[inset_3px_0_0_0] hover:shadow-primary cursor-pointer animate-fade-in"
-                        style={{
-                          animationDelay: `${index * 30}ms`,
-                          animationFillMode: 'backwards',
-                        }}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05, duration: 0.3 }}
+                        className="group border-b last:border-b-0 transition-all duration-300 hover:bg-gradient-to-r hover:from-primary/5 hover:to-transparent hover:shadow-[inset_3px_0_0_0] hover:shadow-primary"
                       >
-                        <td className="p-4">{formatDate(transacao.dataTransacao)}</td>
+                        <td className="p-4 text-sm">{formatDate(transacao.dataTransacao)}</td>
                         <td className="p-4">
-                          <span className="px-2 py-1 rounded-full bg-primary/10 text-primary text-xs group-hover:bg-primary/20 transition-colors duration-300">
+                          <span
+                            className={cn(
+                              'px-2 py-1 rounded-full text-xs font-medium transition-all duration-300',
+                              transacao.tipoTransacao === 'Compra' &&
+                                'bg-success/10 text-success group-hover:bg-success/20',
+                              transacao.tipoTransacao === 'Venda' &&
+                                'bg-error/10 text-error group-hover:bg-error/20',
+                              transacao.tipoTransacao === 'Dividendo' &&
+                                'bg-info/10 text-info group-hover:bg-info/20',
+                              transacao.tipoTransacao === 'JCP' &&
+                                'bg-info/10 text-info group-hover:bg-info/20',
+                              (transacao.tipoTransacao === 'Bonus' ||
+                                transacao.tipoTransacao === 'Split' ||
+                                transacao.tipoTransacao === 'Grupamento') &&
+                                'bg-warning/10 text-warning group-hover:bg-warning/20'
+                            )}
+                          >
                             {transacao.tipoTransacao}
                           </span>
                         </td>
                         <td className="p-4 font-semibold group-hover:text-primary transition-colors duration-300">
                           {transacao.ativoCodigo || '-'}
                         </td>
-                        <td className="p-4 text-right">{transacao.quantidade}</td>
-                        <td className="p-4 text-right">
+                        <td className="p-4 text-right font-mono">{transacao.quantidade}</td>
+                        <td className="p-4 text-right font-mono">
                           {formatCurrency(transacao.preco)}
                         </td>
-                        <td className="p-4 text-right font-semibold">
+                        <td className="p-4 text-right font-semibold font-mono">
                           {formatCurrency(transacao.valorTotal)}
                         </td>
-                      </tr>
+                        <td className="p-4">
+                          <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleEdit(transacao)
+                                }}
+                                className="h-8 w-8 text-primary hover:bg-primary/10"
+                                aria-label="Editar transação"
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                            </motion.div>
+                            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleDelete(transacao)
+                                }}
+                                className="h-8 w-8 text-destructive hover:bg-destructive/10"
+                                aria-label="Excluir transação"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </motion.div>
+                          </div>
+                        </td>
+                      </motion.tr>
                     ))}
                   </tbody>
                 </table>
@@ -129,6 +212,19 @@ const Transacoes = () => {
           />
         </>
       )}
+
+      {/* Modals */}
+      <TransacaoFormModal
+        isOpen={isFormModalOpen}
+        onClose={handleCloseFormModal}
+        transacao={selectedTransacao}
+      />
+
+      <TransacaoDeleteDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        transacao={selectedTransacao}
+      />
     </div>
   )
 }
