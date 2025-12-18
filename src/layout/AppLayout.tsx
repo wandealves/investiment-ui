@@ -1,12 +1,20 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { Suspense, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 import { useTheme } from '@/hooks/useTheme'
 import { cn } from '@/lib/utils'
 
+const pageVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
+}
+
 const AppLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const location = useLocation()
   useTheme()
 
   return (
@@ -18,7 +26,7 @@ const AppLayout = () => {
 
         <main
           className={cn(
-            'flex-1 transition-all duration-300 p-6',
+            'flex-1 transition-all duration-300 p-8',
             sidebarOpen ? 'ml-64' : 'ml-0'
           )}
         >
@@ -29,7 +37,18 @@ const AppLayout = () => {
               </div>
             }
           >
-            <Outlet />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+              >
+                <Outlet />
+              </motion.div>
+            </AnimatePresence>
           </Suspense>
         </main>
       </div>

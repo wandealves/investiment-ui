@@ -4,6 +4,7 @@ import MetricCard from '@/features/dashboard/components/MetricCard'
 import PageHeader from '@/components/common/PageHeader'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { formatCurrency } from '@/utils/formatters'
+import { GridBackground } from '@/components/aceternity'
 
 const Dashboard = () => {
   const { data: metrics, isLoading } = useDashboardData()
@@ -13,14 +14,15 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-6 relative">
-      {/* Subtle gradient background */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/5 via-background to-background opacity-50" />
+    <div className="relative min-h-screen">
+      {/* Grid Background */}
+      <GridBackground className="absolute inset-0 -z-10" />
 
-      <PageHeader
-        title="Dashboard"
-        description="Visão geral dos seus investimentos"
-      />
+      <div className="relative z-10 space-y-6">
+        <PageHeader
+          title="Dashboard"
+          description="Visão geral dos seus investimentos"
+        />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 animate-fade-in">
         <MetricCard
@@ -66,33 +68,34 @@ const Dashboard = () => {
 
       {metrics && metrics.melhorAtivo && metrics.piorAtivo && (
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="group relative overflow-hidden rounded-lg border bg-card p-6 transition-all duration-300 hover:shadow-lg hover:border-green-500/50">
-            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="group relative overflow-hidden rounded-lg border bg-card p-6 transition-all duration-300 hover:shadow-xl hover:shadow-success/20 hover:border-success/50">
+            <div className="absolute inset-0 bg-gradient-to-br from-success/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative">
               <h3 className="text-lg font-semibold mb-2">Melhor Ativo</h3>
-              <p className="text-2xl font-bold text-green-600 dark:text-green-500">
+              <p className="text-2xl font-bold font-mono text-success">
                 {metrics.melhorAtivo.codigo}
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground font-mono">
                 +{metrics.melhorAtivo.rentabilidade.toFixed(2)}%
               </p>
             </div>
           </div>
 
-          <div className="group relative overflow-hidden rounded-lg border bg-card p-6 transition-all duration-300 hover:shadow-lg hover:border-red-500/50">
-            <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="group relative overflow-hidden rounded-lg border bg-card p-6 transition-all duration-300 hover:shadow-xl hover:shadow-error/20 hover:border-error/50">
+            <div className="absolute inset-0 bg-gradient-to-br from-error/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative">
               <h3 className="text-lg font-semibold mb-2">Pior Ativo</h3>
-              <p className="text-2xl font-bold text-red-600 dark:text-red-500">
+              <p className="text-2xl font-bold font-mono text-error">
                 {metrics.piorAtivo.codigo}
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground font-mono">
                 {metrics.piorAtivo.rentabilidade.toFixed(2)}%
               </p>
             </div>
           </div>
         </div>
       )}
+      </div>
     </div>
   )
 }
