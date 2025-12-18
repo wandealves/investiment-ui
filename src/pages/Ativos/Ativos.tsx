@@ -8,11 +8,20 @@ import Pagination from '@/components/common/Pagination'
 import { Button } from '@/components/ui/button'
 import { usePagination } from '@/hooks/usePagination'
 import { cn } from '@/lib/utils'
+import AtivoFormModal from '@/features/ativos/components/AtivoFormModal'
+import AtivoDeleteDialog from '@/features/ativos/components/AtivoDeleteDialog'
+import AtivoActions from '@/features/ativos/components/AtivoActions'
+import type { Ativo } from '@/types/entities.types'
 
 const Ativos = () => {
   // Local state for pagination params to enable proper data fetching
   const [localPage, setLocalPage] = useState(1)
   const [localPageSize, setLocalPageSize] = useState(20)
+
+  // Modal states
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [selectedAtivo, setSelectedAtivo] = useState<Ativo | null>(null)
 
   // Fetch data with local pagination state
   const { data, isLoading, isFetching } = useAtivos({
@@ -37,6 +46,32 @@ const Ativos = () => {
     setLocalPageSize(pageSize)
   }, [currentPage, pageSize])
 
+  // Modal handlers
+  const handleCreate = () => {
+    setSelectedAtivo(null)
+    setIsFormModalOpen(true)
+  }
+
+  const handleEdit = (ativo: Ativo) => {
+    setSelectedAtivo(ativo)
+    setIsFormModalOpen(true)
+  }
+
+  const handleDelete = (ativo: Ativo) => {
+    setSelectedAtivo(ativo)
+    setIsDeleteDialogOpen(true)
+  }
+
+  const handleCloseFormModal = () => {
+    setIsFormModalOpen(false)
+    setSelectedAtivo(null)
+  }
+
+  const handleCloseDeleteDialog = () => {
+    setIsDeleteDialogOpen(false)
+    setSelectedAtivo(null)
+  }
+
   if (isLoading) {
     return <LoadingSpinner />
   }
@@ -47,7 +82,7 @@ const Ativos = () => {
         title="Ativos"
         description="Gerencie seus ativos financeiros"
         action={
-          <Button>
+          <Button onClick={handleCreate}>
             <Plus className="h-4 w-4 mr-2" />
             Novo Ativo
           </Button>
@@ -60,7 +95,7 @@ const Ativos = () => {
           title="Nenhum ativo encontrado"
           description="Adicione ativos para começar a rastrear seus investimentos"
           actionLabel="Adicionar Ativo"
-          onAction={() => console.log('Adicionar ativo')}
+          onAction={handleCreate}
         />
       ) : (
         <>
@@ -78,6 +113,7 @@ const Ativos = () => {
                       <th className="text-left p-4 text-sm font-semibold">Código</th>
                       <th className="text-left p-4 text-sm font-semibold">Nome</th>
                       <th className="text-left p-4 text-sm font-semibold">Tipo</th>
+                      <th className="text-right p-4 text-sm font-semibold">Ações</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -99,6 +135,13 @@ const Ativos = () => {
                             {ativo.tipo}
                           </span>
                         </td>
+                        <td className="p-4">
+                          <AtivoActions
+                            ativo={ativo}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
+                          />
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -118,6 +161,19 @@ const Ativos = () => {
           />
         </>
       )}
+
+      {/* Modals */}
+      <AtivoFormModal
+        isOpen={isFormModalOpen}
+        onClose={handleCloseFormModal}
+        ativo={selectedAtivo}
+      />
+
+      <AtivoDeleteDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        ativo={selectedAtivo}
+      />
     </div>
   )
 }

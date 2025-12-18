@@ -33,6 +33,7 @@ export const ativosEndpoints = {
         params: {
           Page: paginationParams.page,
           PageSize: paginationParams.pageSize,
+          orderBy: 'id desc',
         },
       }
     )
