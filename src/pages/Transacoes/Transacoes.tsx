@@ -1,4 +1,5 @@
 import { Plus, ArrowLeftRight } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import { useTransacoes } from '@/features/transacoes/hooks/useTransacoes'
 import PageHeader from '@/components/common/PageHeader'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
@@ -10,19 +11,32 @@ import { usePagination } from '@/hooks/usePagination'
 import { cn } from '@/lib/utils'
 
 const Transacoes = () => {
-  const { currentPage, pageSize, goToPage, setPageSize } = usePagination({
-    initialPage: 1,
-    initialPageSize: 20,
-    storageKey: 'pagination-transacoes',
-  })
+  // Local state for pagination params to enable proper data fetching
+  const [localPage, setLocalPage] = useState(1)
+  const [localPageSize, setLocalPageSize] = useState(20)
 
+  // Fetch data with local pagination state
   const { data, isLoading, isFetching } = useTransacoes({
-    page: currentPage,
-    pageSize: pageSize,
+    page: localPage,
+    pageSize: localPageSize,
   })
 
   const transacoes = data?.data || []
   const totalItems = data?.total || 0
+
+  // Use pagination hook with totalItems now available
+  const { currentPage, pageSize, goToPage, setPageSize } = usePagination({
+    initialPage: 1,
+    initialPageSize: 20,
+    totalItems: totalItems,
+    storageKey: 'pagination-transacoes',
+  })
+
+  // Sync local state with pagination hook
+  useEffect(() => {
+    setLocalPage(currentPage)
+    setLocalPageSize(pageSize)
+  }, [currentPage, pageSize])
 
   if (isLoading) {
     return <LoadingSpinner />

@@ -1,4 +1,5 @@
 import { Plus, Wallet as WalletIcon } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import { useCarteiras } from '@/features/carteiras/hooks/useCarteiras'
 import CarteiraCard from '@/features/carteiras/components/CarteiraCard'
 import PageHeader from '@/components/common/PageHeader'
@@ -10,19 +11,32 @@ import { usePagination } from '@/hooks/usePagination'
 import { cn } from '@/lib/utils'
 
 const Carteiras = () => {
-  const { currentPage, pageSize, goToPage, setPageSize } = usePagination({
-    initialPage: 1,
-    initialPageSize: 20,
-    storageKey: 'pagination-carteiras',
-  })
+  // Local state for pagination params to enable proper data fetching
+  const [localPage, setLocalPage] = useState(1)
+  const [localPageSize, setLocalPageSize] = useState(20)
 
+  // Fetch data with local pagination state
   const { data, isLoading, isFetching } = useCarteiras({
-    page: currentPage,
-    pageSize: pageSize,
+    page: localPage,
+    pageSize: localPageSize,
   })
 
   const carteiras = data?.data || []
   const totalItems = data?.total || 0
+
+  // Use pagination hook with totalItems now available
+  const { currentPage, pageSize, goToPage, setPageSize } = usePagination({
+    initialPage: 1,
+    initialPageSize: 20,
+    totalItems: totalItems,
+    storageKey: 'pagination-carteiras',
+  })
+
+  // Sync local state with pagination hook
+  useEffect(() => {
+    setLocalPage(currentPage)
+    setLocalPageSize(pageSize)
+  }, [currentPage, pageSize])
 
   if (isLoading) {
     return <LoadingSpinner />
