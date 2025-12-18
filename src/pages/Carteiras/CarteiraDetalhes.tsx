@@ -1,6 +1,9 @@
+import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
 import { useCarteira, useCarteiraAtivos } from '@/features/carteiras/hooks/useCarteiras'
+import CarteiraFormModal from '@/features/carteiras/components/CarteiraFormModal'
+import CarteiraDeleteDialog from '@/features/carteiras/components/CarteiraDeleteDialog'
 import PageHeader from '@/components/common/PageHeader'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { Button } from '@/components/ui/button'
@@ -11,6 +14,26 @@ const CarteiraDetalhes = () => {
   const navigate = useNavigate()
   const { data: carteira, isLoading } = useCarteira(id!)
   const { data: ativos, isLoading: loadingAtivos } = useCarteiraAtivos(id!)
+
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+
+  const handleEdit = () => {
+    setIsFormModalOpen(true)
+  }
+
+  const handleDelete = () => {
+    setIsDeleteDialogOpen(true)
+  }
+
+  const handleCloseFormModal = () => {
+    setIsFormModalOpen(false)
+  }
+
+  const handleCloseDeleteDialog = () => {
+    setIsDeleteDialogOpen(false)
+    navigate('/carteiras')
+  }
 
   if (isLoading || loadingAtivos) {
     return <LoadingSpinner />
@@ -26,10 +49,20 @@ const CarteiraDetalhes = () => {
         title={carteira.nome}
         description={carteira.descricao || 'Detalhes da carteira'}
         action={
-          <Button variant="outline" onClick={() => navigate('/carteiras')}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate('/carteiras')}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Voltar
+            </Button>
+            <Button variant="outline" onClick={handleEdit}>
+              <Pencil className="h-4 w-4 mr-2" />
+              Editar
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              <Trash2 className="h-4 w-4 mr-2" />
+              Excluir
+            </Button>
+          </div>
         }
       />
 
@@ -39,7 +72,7 @@ const CarteiraDetalhes = () => {
             Valor Total
           </p>
           <p className="text-2xl font-bold mt-2">
-            {formatCurrency(carteira.valorTotal)}
+            {formatCurrency(carteira.valorTotal || 0)}
           </p>
         </div>
 
@@ -48,7 +81,7 @@ const CarteiraDetalhes = () => {
             Rentabilidade
           </p>
           <p className="text-2xl font-bold mt-2">
-            {formatPercent(carteira.rentabilidade)}
+            {formatPercent(carteira.rentabilidade || 0)}
           </p>
         </div>
 
@@ -96,6 +129,19 @@ const CarteiraDetalhes = () => {
           )}
         </div>
       </div>
+
+      {/* Modals */}
+      <CarteiraFormModal
+        isOpen={isFormModalOpen}
+        onClose={handleCloseFormModal}
+        carteira={carteira}
+      />
+
+      <CarteiraDeleteDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        carteira={carteira}
+      />
     </div>
   )
 }

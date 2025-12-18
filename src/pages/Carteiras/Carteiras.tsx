@@ -2,6 +2,8 @@ import { Plus, Wallet as WalletIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useCarteiras } from '@/features/carteiras/hooks/useCarteiras'
 import CarteiraCard from '@/features/carteiras/components/CarteiraCard'
+import CarteiraFormModal from '@/features/carteiras/components/CarteiraFormModal'
+import CarteiraDeleteDialog from '@/features/carteiras/components/CarteiraDeleteDialog'
 import PageHeader from '@/components/common/PageHeader'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import EmptyState from '@/components/common/EmptyState'
@@ -9,11 +11,17 @@ import Pagination from '@/components/common/Pagination'
 import { Button } from '@/components/ui/button'
 import { usePagination } from '@/hooks/usePagination'
 import { cn } from '@/lib/utils'
+import type { Carteira } from '@/types/entities.types'
 
 const Carteiras = () => {
   // Local state for pagination params to enable proper data fetching
   const [localPage, setLocalPage] = useState(1)
   const [localPageSize, setLocalPageSize] = useState(20)
+
+  // Modal states
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [selectedCarteira, setSelectedCarteira] = useState<Carteira | null>(null)
 
   // Fetch data with local pagination state
   const { data, isLoading, isFetching } = useCarteiras({
@@ -38,6 +46,32 @@ const Carteiras = () => {
     setLocalPageSize(pageSize)
   }, [currentPage, pageSize])
 
+  // Modal handlers
+  const handleCreate = () => {
+    setSelectedCarteira(null)
+    setIsFormModalOpen(true)
+  }
+
+  const handleEdit = (carteira: Carteira) => {
+    setSelectedCarteira(carteira)
+    setIsFormModalOpen(true)
+  }
+
+  const handleDelete = (carteira: Carteira) => {
+    setSelectedCarteira(carteira)
+    setIsDeleteDialogOpen(true)
+  }
+
+  const handleCloseFormModal = () => {
+    setIsFormModalOpen(false)
+    setSelectedCarteira(null)
+  }
+
+  const handleCloseDeleteDialog = () => {
+    setIsDeleteDialogOpen(false)
+    setSelectedCarteira(null)
+  }
+
   if (isLoading) {
     return <LoadingSpinner />
   }
@@ -48,7 +82,7 @@ const Carteiras = () => {
         title="Carteiras"
         description="Gerencie suas carteiras de investimento"
         action={
-          <Button>
+          <Button onClick={handleCreate}>
             <Plus className="h-4 w-4 mr-2" />
             Nova Carteira
           </Button>
@@ -61,7 +95,7 @@ const Carteiras = () => {
           title="Nenhuma carteira encontrada"
           description="Crie sua primeira carteira para começar a gerenciar seus investimentos"
           actionLabel="Criar Carteira"
-          onAction={() => console.log('Criar carteira')}
+          onAction={handleCreate}
         />
       ) : (
         <>
@@ -81,7 +115,11 @@ const Carteiras = () => {
                     animationFillMode: 'backwards',
                   }}
                 >
-                  <CarteiraCard carteira={carteira} />
+                  <CarteiraCard
+                    carteira={carteira}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                  />
                 </div>
               ))}
             </div>
@@ -98,6 +136,19 @@ const Carteiras = () => {
           />
         </>
       )}
+
+      {/* Modals */}
+      <CarteiraFormModal
+        isOpen={isFormModalOpen}
+        onClose={handleCloseFormModal}
+        carteira={selectedCarteira}
+      />
+
+      <CarteiraDeleteDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        carteira={selectedCarteira}
+      />
     </div>
   )
 }

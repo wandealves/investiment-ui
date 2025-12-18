@@ -1,16 +1,19 @@
 import { Carteira } from '@/types'
 import { formatCurrency, formatPercent } from '@/utils/formatters'
-import { TrendingUp, TrendingDown } from 'lucide-react'
+import { TrendingUp, TrendingDown, Pencil, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useNavigate } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
 
 interface CarteiraCardProps {
   carteira: Carteira
+  onEdit?: (carteira: Carteira) => void
+  onDelete?: (carteira: Carteira) => void
 }
 
-const CarteiraCard = ({ carteira }: CarteiraCardProps) => {
+const CarteiraCard = ({ carteira, onEdit, onDelete }: CarteiraCardProps) => {
   const navigate = useNavigate()
-  const isPositive = carteira.rentabilidade >= 0
+  const isPositive = (carteira.rentabilidade || 0) >= 0
 
   return (
     <div
@@ -33,6 +36,40 @@ const CarteiraCard = ({ carteira }: CarteiraCardProps) => {
           }}
         />
       </div>
+
+      {/* Action buttons - top right corner */}
+      {(onEdit || onDelete) && (
+        <div className="absolute top-4 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+          {onEdit && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation()
+                onEdit(carteira)
+              }}
+              className="h-8 w-8 bg-background/80 backdrop-blur-sm hover:bg-primary/10 text-primary"
+              aria-label="Editar carteira"
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
+          )}
+          {onDelete && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation()
+                onDelete(carteira)
+              }}
+              className="h-8 w-8 bg-background/80 backdrop-blur-sm hover:bg-destructive/10 text-destructive"
+              aria-label="Excluir carteira"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      )}
 
       <div className="relative">
         <div className="flex items-start justify-between">
@@ -64,7 +101,7 @@ const CarteiraCard = ({ carteira }: CarteiraCardProps) => {
           <div>
             <p className="text-sm text-muted-foreground">Valor Total</p>
             <p className="text-2xl font-bold">
-              {formatCurrency(carteira.valorTotal)}
+              {formatCurrency(carteira.valorTotal || 0)}
             </p>
           </div>
           <div>
@@ -75,7 +112,7 @@ const CarteiraCard = ({ carteira }: CarteiraCardProps) => {
                 isPositive ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'
               )}
             >
-              {formatPercent(carteira.rentabilidade)}
+              {formatPercent(carteira.rentabilidade || 0)}
             </p>
           </div>
         </div>
