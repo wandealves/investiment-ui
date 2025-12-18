@@ -1,4 +1,5 @@
 import { ApiClient } from '../client'
+import { api } from '../axios'
 import {
   Carteira,
   CreateCarteiraDto,
@@ -32,7 +33,8 @@ export const carteirasEndpoints = {
       pageSize: params?.pageSize || 20,
     }
 
-    const response = await ApiClient.get<ApiPaginatedResponse<Carteira> | Carteira[]>(
+    // Usar axios diretamente para acessar headers
+    const response = await api.get<ApiPaginatedResponse<Carteira> | Carteira[]>(
       'carteiras',
       {
         params: {
@@ -43,16 +45,27 @@ export const carteirasEndpoints = {
       }
     )
 
-    // Se a API retornar array direto, converter para formato paginado
-    if (Array.isArray(response)) {
+    const data = response.data
+
+    // Se a API retornar array direto, tentar obter total dos headers
+    if (Array.isArray(data)) {
+      // Verificar headers comuns de paginação
+      const totalCount =
+        response.headers['x-total-count'] ||
+        response.headers['X-Total-Count'] ||
+        response.headers['x-total'] ||
+        response.headers['X-Total']
+
+      const count = totalCount ? parseInt(totalCount, 10) : data.length
+
       const apiResponse: ApiPaginatedResponse<Carteira> = {
-        data: response,
-        count: response.length,
+        data: data,
+        count: count,
       }
       return adaptPaginatedResponse(apiResponse, paginationParams)
     }
 
-    return adaptPaginatedResponse(response, paginationParams)
+    return adaptPaginatedResponse(data, paginationParams)
   },
 
   getById: (id: string) => ApiClient.get<Carteira>(`carteiras/${id}`),

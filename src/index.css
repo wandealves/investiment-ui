@@ -4,48 +4,98 @@
 
 @layer base {
   :root {
+    /* Backgrounds */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    --popover-foreground: 222 47% 11%;
+
+    /* Primary - Vibrant Purple/Blue (fintech-inspired) */
+    --primary: 270 91% 65%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 270 91% 55%;
+
+    /* Secondary - Cyan Accent */
+    --secondary: 190 95% 55%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Semantic Colors for Investment Context */
+    --success: 142 76% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --error: 0 84% 60%;
+    --error-foreground: 0 0% 100%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+
+    /* Muted (subtle backgrounds) */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    /* Accent (hover states) */
+    --accent: 270 91% 97%;
+    --accent-foreground: 270 91% 35%;
+
+    /* Borders & Inputs */
+    --border: 214 32% 85%;
+    --input: 214 32% 85%;
+    --ring: 270 91% 65%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Radius - more modern */
+    --radius: 0.75rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    /* Backgrounds */
+    --background: 222 47% 11%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 220 50% 13%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    --popover: 220 50% 13%;
     --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+
+    /* Primary - Vibrant Purple/Blue */
+    --primary: 270 91% 65%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 270 91% 75%;
+
+    /* Secondary - Cyan Accent */
+    --secondary: 190 95% 55%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Semantic Colors */
+    --success: 142 76% 50%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 55%;
+    --warning-foreground: 0 0% 100%;
+    --error: 0 84% 65%;
+    --error-foreground: 0 0% 100%;
+    --info: 217 91% 65%;
+    --info-foreground: 0 0% 100%;
+
+    /* Muted */
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    /* Accent */
+    --accent: 270 91% 20%;
+    --accent-foreground: 270 91% 75%;
+
+    /* Borders & Inputs */
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 270 91% 65%;
+
+    /* Destructive */
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 0 0% 100%;
   }
 }
 
@@ -53,7 +103,28 @@
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold;
+  }
+
+  /* Mono font para valores numéricos */
+  .font-numeric {
+    @apply font-mono tabular-nums;
+  }
+}
+
+/* Respeitar preferência de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
