@@ -21,7 +21,7 @@ export interface EvolucaoPatrimonioData {
 }
 
 export const dashboardEndpoints = {
-  getMetrics: () => ApiClient.get<DashboardMetrics>('/api/v1/dashboard/metrics'),
-  getAlocacao: () => ApiClient.get<AlocacaoData[]>('/api/v1/dashboard/alocacao'),
-  getEvolucao: () => ApiClient.get<EvolucaoPatrimonioData[]>('/api/v1/dashboard/evolucao'),
+  getMetrics: () => ApiClient.get<DashboardMetrics>('dashboard/metrics'),
+  getAlocacao: () => ApiClient.get<AlocacaoData[]>('dashboard/alocacao'),
+  getEvolucao: () => ApiClient.get<EvolucaoPatrimonioData[]>('dashboard/evolucao'),
 }

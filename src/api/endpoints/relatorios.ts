@@ -7,13 +7,13 @@ import {
 
 export const relatoriosEndpoints = {
   rentabilidade: (params: RelatorioRentabilidadeDto) =>
-    ApiClient.get('/api/v1/relatorios/rentabilidade', { params }),
+    ApiClient.get('relatorios/rentabilidade', { params }),
 
   movimentacoes: (params: RelatorioMovimentacoesDto) =>
-    ApiClient.get('/api/v1/relatorios/movimentacoes', { params }),
+    ApiClient.get('relatorios/movimentacoes', { params }),
 
   exportarCsv: (data: ExportarCsvDto) =>
-    ApiClient.post('/api/v1/relatorios/exportar-csv', data, {
+    ApiClient.post('relatorios/exportar-csv', data, {
       responseType: 'blob',
     }),
 }

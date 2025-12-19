@@ -41,7 +41,7 @@ export const ativosEndpoints = {
     return adaptPaginatedResponse(apiResponse, paginationParams)
   },
 
-  getById: (id: string) => ApiClient.get<Ativo>(`/ativos/${id}`),
+  getById: (id: string) => ApiClient.get<Ativo>(`ativos/${id}`),
 
   search: async (query: string, params?: PaginationParams): Promise<PaginatedResponse<Ativo>> => {
     const paginationParams = {
@@ -50,7 +50,7 @@ export const ativosEndpoints = {
     }
 
     const apiResponse = await ApiClient.get<ApiPaginatedResponse<Ativo>>(
-      '/ativos/search',
+      'ativos/search',
       {
         params: {
           q: query,
@@ -66,7 +66,7 @@ export const ativosEndpoints = {
   create: (data: CreateAtivoDto) => ApiClient.post<Ativo>('ativos', data),
 
   update: (id: string, data: UpdateAtivoDto) =>
-    ApiClient.put<Ativo>(`/ativos/${id}`, data),
+    ApiClient.put<Ativo>(`ativos/${id}`, data),
 
-  delete: (id: string) => ApiClient.delete(`/ativos/${id}`),
+  delete: (id: string) => ApiClient.delete(`ativos/${id}`),
 }

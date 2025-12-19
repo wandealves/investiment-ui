@@ -40,7 +40,7 @@ export const transacoesEndpoints = {
     return adaptPaginatedResponse(apiResponse, paginationParams)
   },
 
-  getById: (id: string) => ApiClient.get<Transacao>(`/api/v1/transacoes/${id}`),
+  getById: (id: string) => ApiClient.get<Transacao>(`transacoes/${id}`),
 
   getByCarteira: async (
     carteiraId: string,
