@@ -7,7 +7,7 @@ export interface LoginDto {
 }
 
 export interface LoginResponseDto {
-  token: string
+  // Token agora vem via cookie httpOnly - não mais no response body
   usuario: {
     id: string
     nome: string

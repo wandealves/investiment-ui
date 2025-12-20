@@ -8,27 +8,44 @@ export const api = axios.create({
     'Content-Type': 'application/json',
   },
   timeout: 10000,
+  withCredentials: true, // CRÍTICO: Envia cookies automaticamente (httpOnly)
 })
 
-// Request interceptor para adicionar token
+// Request interceptor - Não precisa mais adicionar token manualmente
+// O cookie httpOnly é enviado automaticamente pelo navegador
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access_token')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
     return config
   },
   (error) => Promise.reject(error)
 )
 
+// Flag para prevenir múltiplos redirects simultâneos
+let isRedirecting = false
+
 // Response interceptor para tratamento de erros
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    return response
+  },
   async (error: AxiosError) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('access_token')
-      window.location.href = '/login'
+      // Prevenir loop infinito: não redirecionar se já estiver em /login
+      const currentPath = window.location.pathname
+      if (currentPath !== '/login' && !isRedirecting) {
+        isRedirecting = true
+        
+        // Limpar estado de autenticação local
+        localStorage.removeItem('auth-storage')
+
+        // Redirecionar para login
+        window.location.href = '/login'
+
+        // Reset flag após 1 segundo
+        setTimeout(() => {
+          isRedirecting = false
+        }, 1000)
+      }
     }
     return Promise.reject(error)
   }

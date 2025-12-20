@@ -24,10 +24,10 @@ const AtivoDeleteDialog = ({ isOpen, onClose, ativo }: AtivoDeleteDialogProps) =
     if (!ativo) return
 
     try {
-      await deleteMutation.mutateAsync(ativo.id)
+      await deleteMutation.mutateAsync(ativo.id.toString())
       onClose()
     } catch (error) {
-      console.error('Error deleting ativo:', error)
+     
     }
   }
 
