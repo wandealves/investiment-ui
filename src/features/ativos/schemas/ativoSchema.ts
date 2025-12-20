@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { TipoAtivo } from '@/types/entities.types'
 
 export const createAtivoSchema = z.object({
   codigo: z
@@ -11,10 +12,10 @@ export const createAtivoSchema = z.object({
     .string()
     .min(1, 'Nome é obrigatório')
     .max(200, 'Nome deve ter no máximo 200 caracteres'),
-  tipo: z
-    .string()
-    .min(1, 'Tipo é obrigatório')
-    .max(50, 'Tipo deve ter no máximo 50 caracteres'),
+  tipo: z.nativeEnum(TipoAtivo, {
+    required_error: 'Tipo é obrigatório',
+    invalid_type_error: 'Tipo inválido',
+  }),
   descricao: z
     .string()
     .max(500, 'Descrição deve ter no máximo 500 caracteres')
@@ -35,11 +36,10 @@ export const updateAtivoSchema = z.object({
     .min(1, 'Nome é obrigatório')
     .max(200, 'Nome deve ter no máximo 200 caracteres')
     .optional(),
-  tipo: z
-    .string()
-    .min(1, 'Tipo é obrigatório')
-    .max(50, 'Tipo deve ter no máximo 50 caracteres')
-    .optional(),
+  tipo: z.nativeEnum(TipoAtivo, {
+    required_error: 'Tipo é obrigatório',
+    invalid_type_error: 'Tipo inválido',
+  }).optional(),
   descricao: z
     .string()
     .max(500, 'Descrição deve ter no máximo 500 caracteres')

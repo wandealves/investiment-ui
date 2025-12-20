@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { createAtivoSchema, type CreateAtivoFormData } from '../schemas/ativoSchema'
 import type { Ativo } from '@/types/entities.types'
+import { TipoAtivo } from '@/types/entities.types'
 
 interface AtivoFormProps {
   ativo?: Ativo
@@ -35,7 +36,7 @@ const AtivoForm = ({ ativo, onSubmit, onCancel, isSubmitting }: AtivoFormProps) 
       : {
           codigo: '',
           nome: '',
-          tipo: '',
+          tipo: undefined as any,
           descricao: '',
         },
   })
@@ -88,12 +89,19 @@ const AtivoForm = ({ ativo, onSubmit, onCancel, isSubmitting }: AtivoFormProps) 
         <Label htmlFor="tipo">
           Tipo <span className="text-destructive">*</span>
         </Label>
-        <Input
+        <select
           id="tipo"
           {...register('tipo')}
-          placeholder="Ex: Ação, FII, ETF, Renda Fixa"
           disabled={isSubmitting}
-        />
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <option value="">Selecione um tipo</option>
+          <option value={TipoAtivo.Acao}>Ação</option>
+          <option value={TipoAtivo.ETF}>ETF</option>
+          <option value={TipoAtivo.FII}>FII</option>
+          <option value={TipoAtivo.Cripto}>Cripto</option>
+          <option value={TipoAtivo.RF}>Renda Fixa</option>
+        </select>
         {errors.tipo && (
           <p className="text-sm text-destructive">{errors.tipo.message}</p>
         )}

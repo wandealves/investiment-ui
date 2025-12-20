@@ -12,6 +12,7 @@ import AtivoFormModal from '@/features/ativos/components/AtivoFormModal'
 import AtivoDeleteDialog from '@/features/ativos/components/AtivoDeleteDialog'
 import AtivoActions from '@/features/ativos/components/AtivoActions'
 import type { Ativo } from '@/types/entities.types'
+import { getTipoAtivoLabel } from '@/utils/tipoAtivoLabels'
 
 const Ativos = () => {
   // Local state for pagination params to enable proper data fetching
@@ -132,7 +133,7 @@ const Ativos = () => {
                         <td className="p-4">{ativo.nome}</td>
                         <td className="p-4">
                           <span className="px-2 py-1 rounded-full bg-primary/10 text-primary text-xs group-hover:bg-primary/20 transition-colors duration-300">
-                            {ativo.tipo}
+                            {getTipoAtivoLabel(ativo.tipo)}
                           </span>
                         </td>
                         <td className="p-4">

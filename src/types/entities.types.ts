@@ -19,11 +19,19 @@ export interface Carteira {
   ativos?: CarteiraAtivo[]
 }
 
+export enum TipoAtivo {
+  Acao = 'Acao',
+  ETF = 'ETF',
+  FII = 'FII',
+  Cripto = 'Cripto',
+  RF = 'RF'
+}
+
 export interface Ativo {
   id: number
   codigo: string
   nome: string
-  tipo: string
+  tipo: TipoAtivo
   descricao?: string
 }
 
@@ -31,7 +39,7 @@ export interface CarteiraAtivo {
   ativoId: number
   ativoNome: string
   ativoCodigo: string
-  ativoTipo: string
+  ativoTipo: TipoAtivo
   quantidadeAtual: number
   precoMedio: number
   valorInvestido: number

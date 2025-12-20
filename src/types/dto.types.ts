@@ -1,4 +1,4 @@
-import { TipoTransacao } from './entities.types'
+import { TipoTransacao, TipoAtivo } from './entities.types'
 
 // Auth DTOs
 export interface LoginDto {
@@ -46,14 +46,14 @@ export interface CarteiraResponseDto {
 export interface CreateAtivoDto {
   codigo: string
   nome: string
-  tipo: string
+  tipo: TipoAtivo
   descricao?: string
 }
 
 export interface UpdateAtivoDto {
   codigo?: string
   nome?: string
-  tipo?: string
+  tipo?: TipoAtivo
   descricao?: string
 }
 

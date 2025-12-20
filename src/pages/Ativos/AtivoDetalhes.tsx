@@ -4,6 +4,7 @@ import { useAtivo } from '@/features/ativos/hooks/useAtivos'
 import PageHeader from '@/components/common/PageHeader'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { Button } from '@/components/ui/button'
+import { getTipoAtivoLabel } from '@/utils/tipoAtivoLabels'
 
 const AtivoDetalhes = () => {
   const { id } = useParams<{ id: string }>()
@@ -36,7 +37,7 @@ const AtivoDetalhes = () => {
         <div className="space-y-4">
           <div>
             <p className="text-sm text-muted-foreground">Tipo</p>
-            <p className="font-semibold">{ativo.tipo}</p>
+            <p className="font-semibold">{getTipoAtivoLabel(ativo.tipo)}</p>
           </div>
           {ativo.descricao && (
             <div>
