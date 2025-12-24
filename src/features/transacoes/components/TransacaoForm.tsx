@@ -5,8 +5,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
+import AtivoCombobox from '@/components/common/AtivoCombobox'
 import { useCarteiras } from '@/features/carteiras/hooks/useCarteiras'
-import { useAtivos } from '@/features/ativos/hooks/useAtivos'
 import { createTransacaoSchema, type CreateTransacaoFormData } from '../schemas/transacaoSchema'
 import type { Transacao, TipoTransacao } from '@/types/entities.types'
 import { cn } from '@/lib/utils'
@@ -31,12 +31,10 @@ const tipoTransacaoOptions: TipoTransacao[] = [
 const TransacaoForm = ({ transacao, onSubmit, onCancel, isSubmitting }: TransacaoFormProps) => {
   const isEditMode = !!transacao
 
-  // Fetch carteiras and ativos for select dropdowns
+  // Fetch carteiras for select dropdown
   const { data: carteirasData, isLoading: isLoadingCarteiras } = useCarteiras({ pageSize: 100 })
-  const { data: ativosData, isLoading: isLoadingAtivos } = useAtivos({ pageSize: 100 })
 
   const carteiras = carteirasData?.data || []
-  const ativos = ativosData?.data || []
 
   const {
     register,
@@ -84,7 +82,7 @@ const TransacaoForm = ({ transacao, onSubmit, onCancel, isSubmitting }: Transaca
   const preco = watch('preco')
   const valorTotal = quantidade && preco ? quantidade * preco : 0
 
-  if (isLoadingCarteiras || isLoadingAtivos) {
+  if (isLoadingCarteiras) {
     return (
       <div className="flex items-center justify-center p-8">
         <LoadingSpinner />
@@ -138,30 +136,14 @@ const TransacaoForm = ({ transacao, onSubmit, onCancel, isSubmitting }: Transaca
           name="ativoId"
           control={control}
           render={({ field }) => (
-            <select
-              {...field}
-              id="ativoId"
-              className={cn(
-                'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                'disabled:cursor-not-allowed disabled:opacity-50',
-                'transition-all duration-300'
-              )}
+            <AtivoCombobox
+              value={field.value}
+              onChange={field.onChange}
               disabled={isSubmitting}
-              onChange={(e) => field.onChange(Number(e.target.value))}
-            >
-              <option value={0}>Selecione um ativo</option>
-              {ativos.map((ativo) => (
-                <option key={ativo.id} value={ativo.id}>
-                  {ativo.codigo} - {ativo.nome}
-                </option>
-              ))}
-            </select>
+              error={errors.ativoId?.message}
+            />
           )}
         />
-        {errors.ativoId && (
-          <p className="text-sm text-destructive">{errors.ativoId.message}</p>
-        )}
       </div>
 
       {/* Tipo de Transação */}

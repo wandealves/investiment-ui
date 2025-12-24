@@ -44,4 +44,7 @@ export const queryKeys = {
     alocacao: ['dashboard', 'alocacao'] as const,
     evolucao: ['dashboard', 'evolucao'] as const,
   },
+  lookups: {
+    ativos: (searchTerm?: string) => ['lookups', 'ativos', searchTerm] as const,
+  },
 } as const

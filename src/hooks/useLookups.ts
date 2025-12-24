@@ -1,0 +1,11 @@
+import { useQuery } from '@tanstack/react-query'
+import { lookupsEndpoints } from '@/api/endpoints/lookups'
+import { queryKeys } from '@/lib/react-query'
+
+export const useAtivosLookup = (searchTerm?: string) => {
+  return useQuery({
+    queryKey: queryKeys.lookups.ativos(searchTerm),
+    queryFn: () => lookupsEndpoints.getAtivos(searchTerm),
+    staleTime: 5 * 60 * 1000, // 5 minutos
+  })
+}
