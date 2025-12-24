@@ -1,4 +1,4 @@
-import { TipoTransacao, TipoAtivo } from './entities.types'
+import { TipoTransacao, TipoAtivo, TipoProvento, StatusProvento } from './entities.types'
 
 // Auth DTOs
 export interface LoginDto {
@@ -94,4 +94,27 @@ export interface RelatorioMovimentacoesDto {
 export interface ExportarCsvDto {
   tipo: 'TRANSACOES' | 'ATIVOS' | 'RENTABILIDADE'
   filtros?: any
+}
+
+// Provento DTOs
+export interface CreateProventoDto {
+  ativoId: number
+  tipoProvento: TipoProvento
+  valorPorCota: number
+  dataCom: string
+  dataEx?: string
+  dataPagamento: string
+  status: StatusProvento
+  observacao?: string
+}
+
+export interface UpdateProventoDto {
+  ativoId?: number
+  tipoProvento?: TipoProvento
+  valorPorCota?: number
+  dataCom?: string
+  dataEx?: string
+  dataPagamento?: string
+  status?: StatusProvento
+  observacao?: string
 }

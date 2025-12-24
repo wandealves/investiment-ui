@@ -11,6 +11,7 @@ const CarteiraDetalhes = lazy(() => import('@/pages/Carteiras/CarteiraDetalhes')
 const Ativos = lazy(() => import('@/pages/Ativos/Ativos'))
 const AtivoDetalhes = lazy(() => import('@/pages/Ativos/AtivoDetalhes'))
 const Transacoes = lazy(() => import('@/pages/Transacoes/Transacoes'))
+const Proventos = lazy(() => import('@/pages/Proventos/Proventos'))
 const Relatorios = lazy(() => import('@/pages/Relatorios/Relatorios'))
 
 export const routes: RouteObject[] = [
@@ -49,6 +50,10 @@ export const routes: RouteObject[] = [
       {
         path: 'transacoes',
         element: <Transacoes />,
+      },
+      {
+        path: 'proventos',
+        element: <Proventos />,
       },
       {
         path: 'relatorios',

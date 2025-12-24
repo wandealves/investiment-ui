@@ -64,6 +64,43 @@ export interface Transacao {
   valorTotal: number
   tipoTransacao: string
   dataTransacao: string
+  proventoId?: number
 }
 
 export type TipoTransacao = 'Compra' | 'Venda' | 'Dividendo' | 'JCP' | 'Bonus' | 'Split' | 'Grupamento'
+
+export enum TipoProvento {
+  Dividendo = 'Dividendo',
+  JCP = 'JCP',
+  RendimentoFII = 'RendimentoFII',
+  Bonificacao = 'Bonificacao'
+}
+
+export enum StatusProvento {
+  Agendado = 'Agendado',
+  Pago = 'Pago',
+  Cancelado = 'Cancelado'
+}
+
+export interface Provento {
+  id: number
+  ativoId: number
+  ativoNome: string
+  ativoCodigo: string
+  tipoProvento: TipoProvento
+  tipoProventoDescricao: string
+  valorPorCota: number
+  dataCom: string
+  dataEx?: string
+  dataPagamento: string
+  status: StatusProvento
+  statusDescricao: string
+  observacao?: string
+  criadoEm: string
+}
+
+export interface ProventoComTransacoes extends Provento {
+  ativo: Ativo
+  transacoes: Transacao[]
+  valorTotalPago: number
+}
