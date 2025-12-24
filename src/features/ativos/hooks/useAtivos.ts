@@ -3,9 +3,9 @@ import { ativosEndpoints } from '@/api/endpoints/ativos'
 import { queryKeys } from '@/lib/react-query'
 import { toast } from '@/hooks/useToast'
 import { CreateAtivoDto, UpdateAtivoDto } from '@/types'
-import { PaginationParams } from '@/types/api.types'
+import { PaginationParams, AtivoFilterParams } from '@/types/api.types'
 
-export const useAtivos = (params?: PaginationParams) => {
+export const useAtivos = (params?: AtivoFilterParams) => {
   return useQuery({
     queryKey: queryKeys.ativos.list(params),
     queryFn: () => ativosEndpoints.getAll(params),

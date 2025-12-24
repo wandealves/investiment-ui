@@ -1,6 +1,6 @@
 import { ApiClient } from '../client'
 import { Ativo, CreateAtivoDto, UpdateAtivoDto } from '@/types'
-import { ApiPaginatedResponse, PaginatedResponse, PaginationParams } from '@/types/api.types'
+import { ApiPaginatedResponse, PaginatedResponse, PaginationParams, AtivoFilterParams } from '@/types/api.types'
 
 // Helper para transformar resposta da API no formato esperado
 function adaptPaginatedResponse<T>(
@@ -21,20 +21,38 @@ function adaptPaginatedResponse<T>(
 }
 
 export const ativosEndpoints = {
-  getAll: async (params?: PaginationParams): Promise<PaginatedResponse<Ativo>> => {
+  getAll: async (params?: AtivoFilterParams): Promise<PaginatedResponse<Ativo>> => {
     const paginationParams = {
       page: params?.page || 1,
       pageSize: params?.pageSize || 20,
     }
 
+    const queryParams: any = {
+      Page: paginationParams.page,
+      PageSize: paginationParams.pageSize,
+      orderBy: 'codigo asc',
+    }
+
+    // Adiciona filtros se fornecidos
+    let query='';
+    if (params?.codigo) {
+      query = `codigo=*${params.codigo.toUpperCase()}`; 
+    }
+    if (params?.nome) {
+    query += `${query.length ? ',':''}nome=*${params.nome.toUpperCase()}`;
+    }
+    if (params?.tipo) {
+    query += `${query.length ? ',':''}tipo=${params.tipo}`;
+    }
+
+    if(query){
+      queryParams.Filter=query;
+    }
+
     const apiResponse = await ApiClient.get<ApiPaginatedResponse<Ativo>>(
       'ativos',
       {
-        params: {
-          Page: paginationParams.page,
-          PageSize: paginationParams.pageSize,
-          orderBy: 'id desc',
-        },
+        params: queryParams,
       }
     )
 

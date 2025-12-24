@@ -35,3 +35,9 @@ export interface FilterParams {
   search?: string
   [key: string]: any
 }
+
+export interface AtivoFilterParams extends PaginationParams {
+  codigo?: string
+  nome?: string
+  tipo?: string
+}
