@@ -11,8 +11,9 @@ export interface Carteira {
   usuarioId: string
   nome: string
   descricao?: string
-  valorTotal: number
-  rentabilidade: number
+  valorTotal?: number
+  lucroTotal?: number
+  rentabilidadeTotal?: number
   criadaEm: string
   totalAtivos?: number
   totalTransacoes?: number

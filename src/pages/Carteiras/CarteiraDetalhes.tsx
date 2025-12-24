@@ -81,7 +81,7 @@ const CarteiraDetalhes = () => {
             Rentabilidade
           </p>
           <p className="text-2xl font-bold mt-2">
-            {formatPercent(carteira.rentabilidade || 0)}
+            {formatPercent(carteira.rentabilidadeTotal || 0)}
           </p>
         </div>
 
@@ -104,23 +104,25 @@ const CarteiraDetalhes = () => {
             </p>
           ) : (
             <div className="space-y-4">
-              {ativos.map((item) => (
+              {ativos.map((item, index) => (
                 <div
-                  key={item.ativoId}
+                  key={item.ativoId || index}
                   className="flex items-center justify-between p-4 rounded-lg border"
                 >
                   <div>
-                    <p className="font-semibold">{item.ativoCodigo}</p>
+                    <p className="font-semibold">
+                      {item.ativoCodigo || `Ativo #${item.ativoId || index + 1}`}
+                    </p>
                     <p className="text-sm text-muted-foreground">
-                      {item.ativoNome}
+                      {item.ativoNome || `Tipo: ${item.ativoTipo}`}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">
-                      {formatCurrency(item.valorAtual || 0)}
+                      {formatCurrency(item.valorInvestido || 0)}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Quantidade: {item.quantidadeAtual}
+                      Qtd: {item.quantidadeAtual} | PM: {formatCurrency(item.precoMedio || 0)}
                     </p>
                   </div>
                 </div>

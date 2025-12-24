@@ -15,7 +15,9 @@ interface CarteiraCardProps {
 
 const CarteiraCard = ({ carteira, onEdit, onDelete }: CarteiraCardProps) => {
   const navigate = useNavigate()
-  const isPositive = (carteira.rentabilidade || 0) >= 0
+  const rentabilidade = carteira.rentabilidadeTotal ?? 0
+  const valorTotal = carteira.valorTotal ?? 0
+  const isPositive = rentabilidade >= 0
 
   return (
     <HoverBorderGradient
@@ -125,7 +127,7 @@ const CarteiraCard = ({ carteira, onEdit, onDelete }: CarteiraCardProps) => {
             <div>
               <p className="text-sm text-muted-foreground font-medium">Valor Total</p>
               <p className="text-2xl font-bold font-mono mt-1">
-                {formatCurrency(carteira.valorTotal || 0)}
+                {formatCurrency(valorTotal)}
               </p>
             </div>
             <div>
@@ -136,7 +138,7 @@ const CarteiraCard = ({ carteira, onEdit, onDelete }: CarteiraCardProps) => {
                   isPositive ? 'text-success' : 'text-error'
                 )}
               >
-                {formatPercent(carteira.rentabilidade || 0)}
+                {formatPercent(rentabilidade)}
               </p>
             </div>
           </div>
