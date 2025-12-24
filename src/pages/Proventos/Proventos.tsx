@@ -110,7 +110,6 @@ const Proventos = () => {
       <PageHeader
         title="Proventos"
         description="Gerencie dividendos, JCP e outros proventos dos seus ativos"
-        icon={DollarSign}
         action={
           <Button onClick={handleCreate}>
             <Plus className="mr-2 h-4 w-4" />
@@ -127,12 +126,8 @@ const Proventos = () => {
             icon={DollarSign}
             title="Nenhum provento cadastrado"
             description="Comece adicionando o primeiro provento dos seus ativos"
-            action={
-              <Button onClick={handleCreate}>
-                <Plus className="mr-2 h-4 w-4" />
-                Adicionar Provento
-              </Button>
-            }
+            actionLabel="Adicionar Provento"
+            onAction={handleCreate}
           />
         ) : (
           <>

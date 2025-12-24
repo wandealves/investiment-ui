@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { proventosEndpoints, ProventoFilterParams } from '@/api/endpoints/proventos'
-import { queryKeys } from '@/lib/react-query'
 import { toast } from '@/hooks/useToast'
 import { CreateProventoDto, UpdateProventoDto } from '@/types'
 
