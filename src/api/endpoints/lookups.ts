@@ -1,5 +1,5 @@
 import { ApiClient } from '../client'
-import { Ativo } from '@/types'
+import { Ativo, AnoLookup } from '@/types'
 import { ApiPaginatedResponse, PaginatedResponse } from '@/types/api.types'
 
 interface LookupsParams {
@@ -59,5 +59,9 @@ export const lookupsEndpoints = {
     )
 
     return adaptPaginatedResponse(apiResponse, params)
+  },
+
+  getAnos: async (): Promise<AnoLookup[]> => {
+    return ApiClient.get<AnoLookup[]>('lookup/anos')
   },
 }

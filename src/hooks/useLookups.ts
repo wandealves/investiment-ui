@@ -9,3 +9,11 @@ export const useAtivosLookup = (searchTerm?: string) => {
     staleTime: 5 * 60 * 1000, // 5 minutos
   })
 }
+
+export const useAnosLookup = () => {
+  return useQuery({
+    queryKey: queryKeys.lookups.anos,
+    queryFn: () => lookupsEndpoints.getAnos(),
+    staleTime: 60 * 60 * 1000, // 1 hora - anos não mudam com frequência
+  })
+}

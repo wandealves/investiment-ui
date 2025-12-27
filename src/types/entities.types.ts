@@ -143,3 +143,7 @@ export interface HistoricoCompra {
   taxaRateada: number
   totalComTaxas: number
 }
+
+export interface AnoLookup {
+  ano: number
+}

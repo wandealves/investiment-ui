@@ -46,5 +46,6 @@ export const queryKeys = {
   },
   lookups: {
     ativos: (searchTerm?: string) => ['lookups', 'ativos', searchTerm] as const,
+    anos: ['lookups', 'anos'] as const,
   },
 } as const
