@@ -52,7 +52,7 @@ export const lookupsEndpoints = {
     }
 
     const apiResponse = await ApiClient.get<ApiPaginatedResponse<Ativo>>(
-      'lookups',
+      'lookup/ativos',
       {
         params: queryParams,
       }
