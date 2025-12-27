@@ -118,3 +118,8 @@ export interface UpdateProventoDto {
   status?: StatusProvento
   observacao?: string
 }
+
+// Imposto de Renda DTOs
+export interface CalcularIRDto {
+  ano: number | null
+}

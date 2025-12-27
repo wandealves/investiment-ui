@@ -104,3 +104,42 @@ export interface ProventoComTransacoes extends Provento {
   transacoes: Transacao[]
   valorTotalPago: number
 }
+
+export interface CalculoIR {
+  id: string
+  ano: number | null
+  dataCalculo: string
+  valorTotalInvestido: number
+  valorTotalAtual: number | null
+  totalTaxasRateadas: number
+  totalGanhoCapital: number
+  totalIRDevido: number
+  itens: ItemCalculoIR[]
+}
+
+export interface ItemCalculoIR {
+  ativoId: number
+  ativoNome: string
+  ativoCodigo: string
+  ativoTipo: TipoAtivo
+  quantidade: number
+  totalInvestido: number
+  precoMedio: number
+  precoAtual: number | null
+  rendimento: number | null
+  taxasRateadas: number
+  ganhoCapital: number
+  irDevido: number
+  aliquotaIR: number
+  historicoCompras: HistoricoCompra[]
+}
+
+export interface HistoricoCompra {
+  transacaoId: string
+  dataCompra: string
+  quantidade: number
+  preco: number
+  taxa: number
+  taxaRateada: number
+  totalComTaxas: number
+}
