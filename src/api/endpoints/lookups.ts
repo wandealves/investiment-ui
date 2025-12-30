@@ -1,5 +1,5 @@
 import { ApiClient } from '../client'
-import { Ativo, AnoLookup } from '@/types'
+import { Ativo, AnoLookup, Carteira } from '@/types'
 import { ApiPaginatedResponse, PaginatedResponse } from '@/types/api.types'
 
 interface LookupsParams {
@@ -63,5 +63,38 @@ export const lookupsEndpoints = {
 
   getAnos: async (): Promise<AnoLookup[]> => {
     return ApiClient.get<AnoLookup[]>('lookup/anos')
+  },
+
+  getCarteiras: async (searchTerm?: string): Promise<PaginatedResponse<Carteira>> => {
+    const params: LookupsParams = {
+      page: 1,
+      pageSize: 100,
+      orderBy: 'nome asc',
+    }
+
+    // Adiciona filtro se houver termo de busca
+    if (searchTerm && searchTerm.trim()) {
+      const upperTerm = searchTerm.toUpperCase()
+      params.filter = `nome=*${upperTerm},codigo=*${upperTerm}`
+    }
+
+    const queryParams: any = {
+      Page: params.page,
+      PageSize: params.pageSize,
+      OrderBy: params.orderBy,
+    }
+
+    if (params.filter) {
+      queryParams.Filter = params.filter
+    }
+
+    const apiResponse = await ApiClient.get<ApiPaginatedResponse<Carteira>>(
+      'lookup/carteiras',
+      {
+        params: queryParams,
+      }
+    )
+
+    return adaptPaginatedResponse(apiResponse, params)
   },
 }

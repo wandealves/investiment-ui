@@ -17,3 +17,11 @@ export const useAnosLookup = () => {
     staleTime: 60 * 60 * 1000, // 1 hora - anos não mudam com frequência
   })
 }
+
+export const useCarteirasLookup = (searchTerm?: string) => {
+  return useQuery({
+    queryKey: queryKeys.lookups.carteiras(searchTerm),
+    queryFn: () => lookupsEndpoints.getCarteiras(searchTerm),
+    staleTime: 5 * 60 * 1000, // 5 minutos
+  })
+}

@@ -122,4 +122,5 @@ export interface UpdateProventoDto {
 // Imposto de Renda DTOs
 export interface CalcularIRDto {
   ano: number | null
+  carteiraId?: number | null
 }

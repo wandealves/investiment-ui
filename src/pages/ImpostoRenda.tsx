@@ -7,17 +7,22 @@ import { Button } from '@/components/ui/button'
 import { CardContainer, CardBody, CardItem } from '@/components/aceternity'
 import PageHeader from '@/components/common/PageHeader'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
+import CarteiraCombobox from '@/components/common/CarteiraCombobox'
 import { GridBackground } from '@/components/aceternity'
 
 const ImpostoRenda = () => {
   const [anoSelecionado, setAnoSelecionado] = useState<number | null>(new Date().getFullYear())
+  const [carteiraIdSelecionada, setCarteiraIdSelecionada] = useState<number | null>(null)
 
   const { data: historico, isLoading } = useHistoricoCalculosIR()
   const { data: anosData, isLoading: isLoadingAnos } = useAnosLookup()
   const calcularMutation = useCalcularIR()
 
   const handleCalcular = () => {
-    calcularMutation.mutate({ ano: anoSelecionado })
+    calcularMutation.mutate({
+      ano: anoSelecionado,
+      carteiraId: carteiraIdSelecionada
+    })
   }
 
   const calculoAtual = historico?.find((c) => c.ano === anoSelecionado)
@@ -53,34 +58,50 @@ const ImpostoRenda = () => {
           description="Cálculo de IR sobre ganho de capital e rateio de taxas"
         />
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <label className="text-sm font-medium text-foreground">Ano:</label>
-          <Select
-            value={anoSelecionado?.toString() ?? '0'}
-            onChange={(e) => {
-              const value = parseInt(e.target.value)
-              setAnoSelecionado(value === 0 ? null : value)
-            }}
-            disabled={isLoadingAnos}
-            className="w-48"
-          >
-            {anos.map((item) => (
-              <option key={item.ano} value={item.ano}>
-                {item.ano === 0 ? 'Todos os anos' : item.ano}
-              </option>
-            ))}
-          </Select>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium text-foreground">Ano:</label>
+            <Select
+              value={anoSelecionado?.toString() ?? '0'}
+              onChange={(e) => {
+                const value = parseInt(e.target.value)
+                setAnoSelecionado(value === 0 ? null : value)
+              }}
+              disabled={isLoadingAnos}
+              className="w-48"
+            >
+              {anos.map((item) => (
+                <option key={item.ano} value={item.ano}>
+                  {item.ano === 0 ? 'Todos os anos' : item.ano}
+                </option>
+              ))}
+            </Select>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium text-foreground">Carteira:</label>
+            <div className="w-80">
+              <CarteiraCombobox
+                value={carteiraIdSelecionada}
+                onChange={setCarteiraIdSelecionada}
+                disabled={calcularMutation.isPending}
+                allowNull={true}
+              />
+            </div>
+          </div>
         </div>
 
-        <Button
-          onClick={handleCalcular}
-          disabled={calcularMutation.isPending}
-          isLoading={calcularMutation.isPending}
-        >
-          <Calculator className="w-4 h-4 mr-2" />
-          {calculoAtual ? 'Recalcular IR' : 'Calcular IR'}
-        </Button>
+        <div className="flex justify-end">
+          <Button
+            onClick={handleCalcular}
+            disabled={calcularMutation.isPending}
+            isLoading={calcularMutation.isPending}
+          >
+            <Calculator className="w-4 h-4 mr-2" />
+            {calculoAtual ? 'Recalcular IR' : 'Calcular IR'}
+          </Button>
+        </div>
       </div>
 
       {calculoAtual && (
