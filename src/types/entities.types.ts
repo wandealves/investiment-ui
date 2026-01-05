@@ -126,6 +126,7 @@ export interface ItemCalculoIR {
   precoAtual: number | null
   rendimento: number | null
   taxasRateadas: number
+  data: string
   historicoCompras: HistoricoCompra[]
 }
 
