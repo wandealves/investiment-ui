@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Calculator, DollarSign } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Calculator, DollarSign, BarChart3 } from "lucide-react";
 import {
   useCalcularIR,
   useHistoricoCalculosIR
@@ -66,10 +67,18 @@ const ImpostoRenda = () => {
       <GridBackground className="absolute inset-0 -z-10" />
 
       <div className="relative z-10 space-y-6">
-        <PageHeader
-          title="Imposto de Renda"
-          description="Cálculo de IR sobre ganho de capital e rateio de taxas"
-        />
+        <div className="flex items-center justify-between">
+          <PageHeader
+            title="Imposto de Renda"
+            description="Cálculo de IR sobre ganho de capital e rateio de taxas"
+          />
+          <Link to="/impostoderenda/visualizacao">
+            <Button variant="outline">
+              <BarChart3 className="w-4 h-4 mr-2" />
+              Visualização por Período
+            </Button>
+          </Link>
+        </div>
 
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-6">

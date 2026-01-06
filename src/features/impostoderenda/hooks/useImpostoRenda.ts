@@ -61,3 +61,26 @@ export const useExcluirCalculoIR = () => {
     },
   })
 }
+
+export const useVisualizacaoIR = (
+  ano: number | null,
+  mes: number | null,
+  carteiraId: number | null
+) => {
+  const enabled = !!ano && !!carteiraId
+
+  return useQuery({
+    queryKey: [...queryKeys.all, 'visualizacao', ano, mes, carteiraId] as const,
+    queryFn: () => {
+      if (!ano || !carteiraId) {
+        throw new Error('Ano e Carteira são obrigatórios')
+      }
+      return impostoRendaEndpoints.obterVisualizacao({
+        ano,
+        mes: mes || undefined,
+        carteiraId,
+      })
+    },
+    enabled,
+  })
+}

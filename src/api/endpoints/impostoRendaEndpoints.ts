@@ -1,5 +1,6 @@
 import { ApiClient } from '../client'
-import { CalculoIR, CalcularIRDto } from '@/types'
+import { CalculoIR, CalcularIRDto, VisualizacaoIRDto } from '@/types'
+import { ItemVisualizacaoIR } from '@/types/entities.types'
 
 export const impostoRendaEndpoints = {
   calcular: (data: CalcularIRDto) =>
@@ -13,4 +14,7 @@ export const impostoRendaEndpoints = {
 
   excluir: (id: string) =>
     ApiClient.delete(`impostoderenda/${id}`),
+
+  obterVisualizacao: (params: VisualizacaoIRDto) =>
+    ApiClient.get<ItemVisualizacaoIR[]>('impostoderenda/visualizacao', { params }),
 }

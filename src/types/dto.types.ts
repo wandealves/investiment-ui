@@ -124,3 +124,9 @@ export interface CalcularIRDto {
   ano: number | null
   carteiraId?: number | null
 }
+
+export interface VisualizacaoIRDto {
+  ano: number
+  mes?: number | null
+  carteiraId: number
+}

@@ -140,6 +140,15 @@ export interface HistoricoCompra {
   totalComTaxas: number
 }
 
+export interface ItemVisualizacaoIR {
+  ativoCodigo: string
+  ativoNome: string
+  ativoTipo: TipoAtivo
+  quantidadeTotal: number
+  total: number
+  itensCount?: number
+}
+
 export interface AnoLookup {
   ano: number
 }
