@@ -15,14 +15,13 @@ import { GridBackground } from "@/components/aceternity";
 import { formatDate } from "@/utils/formatters";
 
 const ImpostoRenda = () => {
-  const [anoSelecionado, setAnoSelecionado] = useState<number | null>(
-    new Date().getFullYear()
-  );
+  const [anoSelecionado, setAnoSelecionado] = useState<number | null>(null);
   const [carteiraIdSelecionada, setCarteiraIdSelecionada] = useState<
     number | null
   >(null);
 
-  const { data: historico, isLoading } = useHistoricoCalculosIR();
+  const isFetchEnabled = !!anoSelecionado && !!carteiraIdSelecionada;
+  const { data: historico, isLoading } = useHistoricoCalculosIR(isFetchEnabled);
   const { data: anosData, isLoading: isLoadingAnos } = useAnosLookup();
   const calcularMutation = useCalcularIR();
 
@@ -79,17 +78,18 @@ const ImpostoRenda = () => {
                 Ano:
               </label>
               <Select
-                value={anoSelecionado?.toString() ?? "0"}
+                value={anoSelecionado?.toString() ?? ""}
                 onChange={e => {
-                  const value = parseInt(e.target.value);
-                  setAnoSelecionado(value === 0 ? null : value);
+                  const value = e.target.value;
+                  setAnoSelecionado(value === "" ? null : parseInt(value));
                 }}
                 disabled={isLoadingAnos}
                 className="w-48"
               >
-                {anos.map(item => (
+                <option value="" disabled>Selecione um ano</option>
+                {anos.filter(item => item.ano !== 0).map(item => (
                   <option key={item.ano} value={item.ano}>
-                    {item.ano === 0 ? "Todos os anos" : item.ano}
+                    {item.ano}
                   </option>
                 ))}
               </Select>
@@ -104,21 +104,26 @@ const ImpostoRenda = () => {
                   value={carteiraIdSelecionada}
                   onChange={setCarteiraIdSelecionada}
                   disabled={calcularMutation.isPending}
-                  allowNull={true}
+                  allowNull={false}
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex flex-col items-end gap-2">
             <Button
               onClick={handleCalcular}
-              disabled={calcularMutation.isPending}
+              disabled={!anoSelecionado || !carteiraIdSelecionada || calcularMutation.isPending}
               isLoading={calcularMutation.isPending}
             >
               <Calculator className="w-4 h-4 mr-2" />
               {calculoAtual ? "Recalcular IR" : "Calcular IR"}
             </Button>
+            {(!anoSelecionado || !carteiraIdSelecionada) && (
+              <p className="text-sm text-muted-foreground">
+                Selecione o ano e a carteira para calcular
+              </p>
+            )}
           </div>
         </div>
 
@@ -266,7 +271,10 @@ const ImpostoRenda = () => {
 
         {!calculoAtual && !isLoading && (
           <div className="text-center py-12 text-muted-foreground">
-            Nenhum cálculo disponível. Clique em "Calcular IR" para gerar.
+            {!anoSelecionado || !carteiraIdSelecionada
+              ? "Selecione o ano e a carteira para visualizar ou calcular o IR"
+              : "Nenhum cálculo disponível. Clique em 'Calcular IR' para gerar."
+            }
           </div>
         )}
       </div>

@@ -9,10 +9,11 @@ const queryKeys = {
   calculo: (id: string) => [...queryKeys.all, id] as const,
 }
 
-export const useHistoricoCalculosIR = () => {
+export const useHistoricoCalculosIR = (enabled: boolean = true) => {
   return useQuery({
     queryKey: queryKeys.historico(),
     queryFn: () => impostoRendaEndpoints.obterHistorico(),
+    enabled,
   })
 }
 
