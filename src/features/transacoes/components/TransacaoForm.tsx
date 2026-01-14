@@ -52,6 +52,7 @@ const TransacaoForm = ({ transacao, onSubmit, onCancel, isSubmitting }: Transaca
           tipoTransacao: transacao.tipoTransacao as TipoTransacao,
           quantidade: transacao.quantidade,
           preco: transacao.preco,
+          taxa: transacao.taxa,
           dataTransacao: transacao.dataTransacao.split('T')[0], // Format to YYYY-MM-DD for input[type="date"]
         }
       : {
@@ -60,6 +61,7 @@ const TransacaoForm = ({ transacao, onSubmit, onCancel, isSubmitting }: Transaca
           tipoTransacao: 'Compra',
           quantidade: 0,
           preco: 0,
+          taxa: 0,
           dataTransacao: new Date().toISOString().split('T')[0],
         },
   })
@@ -72,6 +74,7 @@ const TransacaoForm = ({ transacao, onSubmit, onCancel, isSubmitting }: Transaca
         tipoTransacao: transacao.tipoTransacao as TipoTransacao,
         quantidade: transacao.quantidade,
         preco: transacao.preco,
+        taxa: transacao.taxa,
         dataTransacao: transacao.dataTransacao.split('T')[0],
       })
     }
@@ -225,6 +228,29 @@ const TransacaoForm = ({ transacao, onSubmit, onCancel, isSubmitting }: Transaca
         </div>
       </div>
 
+      {/* Taxa */}
+      <div className="space-y-2">
+        <Label htmlFor="taxa">Taxa</Label>
+        <Controller
+          name="taxa"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              id="taxa"
+              type="number"
+              step="0.01"
+              placeholder="0.00"
+              disabled={isSubmitting}
+              onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+            />
+          )}
+        />
+        {errors.taxa && (
+          <p className="text-sm text-destructive">{errors.taxa.message}</p>
+        )}
+      </div>
+
       {/* Data da Transação */}
       <div className="space-y-2">
         <Label htmlFor="dataTransacao">
@@ -242,13 +268,21 @@ const TransacaoForm = ({ transacao, onSubmit, onCancel, isSubmitting }: Transaca
       </div>
 
       {/* Valor Total (read-only) */}
-      <div className="rounded-lg border bg-muted/30 p-4">
+      <div className="rounded-lg border bg-muted/30 p-4 space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-muted-foreground">Valor Total</span>
           <span className="text-lg font-bold font-mono">
             R$ {valorTotal.toFixed(2).replace('.', ',')}
           </span>
         </div>
+        {watch('taxa') > 0 && (
+          <div className="flex items-center justify-between pt-2 border-t">
+            <span className="text-sm font-medium text-muted-foreground">Taxas</span>
+            <span className="text-sm font-mono text-muted-foreground">
+              R$ {watch('taxa').toFixed(2).replace('.', ',')}
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="flex justify-end gap-3 pt-4">

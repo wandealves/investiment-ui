@@ -64,6 +64,7 @@ export interface CreateTransacaoDto {
   tipoTransacao: string
   quantidade: number
   preco: number
+  taxa?: number
   dataTransacao: string
 }
 
@@ -73,6 +74,7 @@ export interface UpdateTransacaoDto {
   tipoTransacao?: string
   quantidade?: number
   preco?: number
+  taxa?: number
   dataTransacao?: string
 }
 

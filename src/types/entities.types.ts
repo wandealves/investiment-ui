@@ -61,6 +61,7 @@ export interface Transacao {
   ativoCodigo?: string
   quantidade: number
   preco: number
+  taxa: number
   valorTotal: number
   tipoTransacao: string
   dataTransacao: string

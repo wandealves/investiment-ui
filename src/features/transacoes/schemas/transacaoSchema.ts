@@ -29,6 +29,13 @@ export const createTransacaoSchema = z.object({
       invalid_type_error: 'Preço deve ser um número',
     })
     .positive('Preço deve ser maior que zero'),
+  taxa: z
+    .number({
+      invalid_type_error: 'Taxa deve ser um número',
+    })
+    .nonnegative('Taxa deve ser maior ou igual a zero')
+    .optional()
+    .default(0),
   dataTransacao: z
     .string()
     .min(1, 'Data da transação é obrigatória'),
@@ -42,6 +49,7 @@ export const updateTransacaoSchema = z.object({
     .optional(),
   quantidade: z.number().positive('Quantidade deve ser maior que zero').optional(),
   preco: z.number().positive('Preço deve ser maior que zero').optional(),
+  taxa: z.number().nonnegative('Taxa deve ser maior ou igual a zero').optional(),
   dataTransacao: z.string().min(1, 'Data da transação é obrigatória').optional(),
 })
 
