@@ -1,6 +1,6 @@
 import { ApiClient } from '../client'
 import { Transacao, CreateTransacaoDto, UpdateTransacaoDto } from '@/types'
-import { ApiPaginatedResponse, PaginatedResponse, PaginationParams } from '@/types/api.types'
+import { ApiPaginatedResponse, PaginatedResponse, PaginationParams, TransacaoFilterParams } from '@/types/api.types'
 
 // Helper para transformar resposta da API no formato esperado
 function adaptPaginatedResponse<T>(
@@ -21,20 +21,36 @@ function adaptPaginatedResponse<T>(
 }
 
 export const transacoesEndpoints = {
-  getAll: async (params?: PaginationParams): Promise<PaginatedResponse<Transacao>> => {
+  getAll: async (params?: TransacaoFilterParams): Promise<PaginatedResponse<Transacao>> => {
     const paginationParams = {
       page: params?.page || 1,
       pageSize: params?.pageSize || 20,
     }
 
+    const queryParams: any = {
+      Page: paginationParams.page,
+      PageSize: paginationParams.pageSize,
+      orderBy: 'dataTransacao desc' 
+    }
+
+    // Build Filter string for backend Gridify
+    const filterParts: string[] = []
+
+    if (params?.tipoTransacao) {
+      filterParts.push(`tipoTransacao=${params.tipoTransacao}`)
+    }
+
+    if (params?.ativoId) {
+      filterParts.push(`ativoId=${params.ativoId}`)
+    }
+
+    if (filterParts.length > 0) {
+      queryParams.Filter = filterParts.join(',')
+    }
+//DataTransacao
     const apiResponse = await ApiClient.get<ApiPaginatedResponse<Transacao>>(
       'transacoes',
-      {
-        params: {
-          Page: paginationParams.page,
-          PageSize: paginationParams.pageSize,
-        },
-      }
+      { params: queryParams}
     )
 
     return adaptPaginatedResponse(apiResponse, paginationParams)

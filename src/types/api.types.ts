@@ -41,3 +41,8 @@ export interface AtivoFilterParams extends PaginationParams {
   nome?: string
   tipo?: string
 }
+
+export interface TransacaoFilterParams extends PaginationParams {
+  tipoTransacao?: string
+  ativoId?: number
+}

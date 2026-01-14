@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useTransacoes } from '@/features/transacoes/hooks/useTransacoes'
 import TransacaoFormModal from '@/features/transacoes/components/TransacaoFormModal'
 import TransacaoDeleteDialog from '@/features/transacoes/components/TransacaoDeleteDialog'
+import TransacaoFilters from '@/features/transacoes/components/TransacaoFilters'
 import PageHeader from '@/components/common/PageHeader'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import EmptyState from '@/components/common/EmptyState'
@@ -24,14 +25,21 @@ const Transacoes = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedTransacao, setSelectedTransacao] = useState<Transacao | null>(null)
 
-  // Fetch data with local pagination state
+  // Filter states
+  const [tipoFilter, setTipoFilter] = useState<string>('')
+  const [ativoFilter, setAtivoFilter] = useState<number>(0)
+
+  // Fetch data with filters sent to backend
   const { data, isLoading, isFetching } = useTransacoes({
     page: localPage,
     pageSize: localPageSize,
+    tipoTransacao: tipoFilter || undefined,
+    ativoId: ativoFilter || undefined,
   })
 
   const transacoes = data?.data || []
   const totalItems = data?.total || 0
+  const hasActiveFilters = tipoFilter !== '' || ativoFilter !== 0
 
   // Use pagination hook with totalItems now available
   const { currentPage, pageSize, goToPage, setPageSize } = usePagination({
@@ -46,6 +54,11 @@ const Transacoes = () => {
     setLocalPage(currentPage)
     setLocalPageSize(pageSize)
   }, [currentPage, pageSize])
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    goToPage(1)
+  }, [tipoFilter, ativoFilter, goToPage])
 
   // Modal handlers
   const handleCreate = () => {
@@ -90,13 +103,28 @@ const Transacoes = () => {
         }
       />
 
+      <TransacaoFilters
+        tipoFilter={tipoFilter}
+        ativoFilter={ativoFilter}
+        onTipoChange={setTipoFilter}
+        onAtivoChange={setAtivoFilter}
+        onClearFilters={() => {
+          setTipoFilter('')
+          setAtivoFilter(0)
+        }}
+      />
+
       {totalItems === 0 ? (
         <EmptyState
           icon={ArrowLeftRight}
-          title="Nenhuma transação encontrada"
-          description="Registre suas primeiras transações para começar a rastrear seus investimentos"
-          actionLabel="Adicionar Transação"
-          onAction={handleCreate}
+          title={hasActiveFilters ? 'Nenhum resultado encontrado' : 'Nenhuma transação encontrada'}
+          description={
+            hasActiveFilters
+              ? 'Tente ajustar os filtros para ver mais resultados'
+              : 'Registre suas primeiras transações para começar a rastrear seus investimentos'
+          }
+          actionLabel={!hasActiveFilters ? 'Adicionar Transação' : undefined}
+          onAction={!hasActiveFilters ? handleCreate : undefined}
         />
       ) : (
         <>

@@ -3,9 +3,9 @@ import { transacoesEndpoints } from '@/api/endpoints/transacoes'
 import { queryKeys } from '@/lib/react-query'
 import { toast } from '@/hooks/useToast'
 import { CreateTransacaoDto, UpdateTransacaoDto } from '@/types'
-import { PaginationParams } from '@/types/api.types'
+import { PaginationParams, TransacaoFilterParams } from '@/types/api.types'
 
-export const useTransacoes = (params?: PaginationParams) => {
+export const useTransacoes = (params?: TransacaoFilterParams) => {
   return useQuery({
     queryKey: queryKeys.transacoes.list(params),
     queryFn: () => transacoesEndpoints.getAll(params),
