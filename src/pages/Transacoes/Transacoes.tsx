@@ -25,9 +25,17 @@ const Transacoes = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedTransacao, setSelectedTransacao] = useState<Transacao | null>(null)
 
-  // Filter states
+  // Local filter states (what user is typing/selecting)
+  const [localTipoFilter, setLocalTipoFilter] = useState<string>('')
+  const [localAtivoFilter, setLocalAtivoFilter] = useState<number>(0)
+  const [localDataInicio, setLocalDataInicio] = useState<string>('')
+  const [localDataFim, setLocalDataFim] = useState<string>('')
+
+  // Applied filter states (what goes to API)
   const [tipoFilter, setTipoFilter] = useState<string>('')
   const [ativoFilter, setAtivoFilter] = useState<number>(0)
+  const [dataInicio, setDataInicio] = useState<string>('')
+  const [dataFim, setDataFim] = useState<string>('')
 
   // Fetch data with filters sent to backend
   const { data, isLoading, isFetching } = useTransacoes({
@@ -35,11 +43,40 @@ const Transacoes = () => {
     pageSize: localPageSize,
     tipoTransacao: tipoFilter || undefined,
     ativoId: ativoFilter || undefined,
+    dataInicio: dataInicio || undefined,
+    dataFim: dataFim || undefined,
   })
 
   const transacoes = data?.data || []
   const totalItems = data?.total || 0
-  const hasActiveFilters = tipoFilter !== '' || ativoFilter !== 0
+  const hasActiveFilters = tipoFilter !== '' || ativoFilter !== 0 || dataInicio !== '' || dataFim !== ''
+
+  // Check if there are unapplied changes
+  const hasUnappliedChanges =
+    localTipoFilter !== tipoFilter ||
+    localAtivoFilter !== ativoFilter ||
+    localDataInicio !== dataInicio ||
+    localDataFim !== dataFim
+
+  // Apply filters handler
+  const handleApplyFilters = () => {
+    setTipoFilter(localTipoFilter)
+    setAtivoFilter(localAtivoFilter)
+    setDataInicio(localDataInicio)
+    setDataFim(localDataFim)
+  }
+
+  // Clear filters handler
+  const handleClearFilters = () => {
+    setLocalTipoFilter('')
+    setLocalAtivoFilter(0)
+    setLocalDataInicio('')
+    setLocalDataFim('')
+    setTipoFilter('')
+    setAtivoFilter(0)
+    setDataInicio('')
+    setDataFim('')
+  }
 
   // Use pagination hook with totalItems now available
   const { currentPage, pageSize, goToPage, setPageSize } = usePagination({
@@ -58,7 +95,7 @@ const Transacoes = () => {
   // Reset to page 1 when filters change
   useEffect(() => {
     goToPage(1)
-  }, [tipoFilter, ativoFilter, goToPage])
+  }, [tipoFilter, ativoFilter, dataInicio, dataFim, goToPage])
 
   // Modal handlers
   const handleCreate = () => {
@@ -104,14 +141,17 @@ const Transacoes = () => {
       />
 
       <TransacaoFilters
-        tipoFilter={tipoFilter}
-        ativoFilter={ativoFilter}
-        onTipoChange={setTipoFilter}
-        onAtivoChange={setAtivoFilter}
-        onClearFilters={() => {
-          setTipoFilter('')
-          setAtivoFilter(0)
-        }}
+        tipoFilter={localTipoFilter}
+        ativoFilter={localAtivoFilter}
+        dataInicio={localDataInicio}
+        dataFim={localDataFim}
+        onTipoChange={setLocalTipoFilter}
+        onAtivoChange={setLocalAtivoFilter}
+        onDataInicioChange={setLocalDataInicio}
+        onDataFimChange={setLocalDataFim}
+        onClearFilters={handleClearFilters}
+        onApplyFilters={handleApplyFilters}
+        hasUnappliedChanges={hasUnappliedChanges}
       />
 
       {totalItems === 0 ? (

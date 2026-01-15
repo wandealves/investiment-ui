@@ -45,4 +45,6 @@ export interface AtivoFilterParams extends PaginationParams {
 export interface TransacaoFilterParams extends PaginationParams {
   tipoTransacao?: string
   ativoId?: number
+  dataInicio?: string  // Format: YYYY-MM-DD
+  dataFim?: string     // Format: YYYY-MM-DD
 }

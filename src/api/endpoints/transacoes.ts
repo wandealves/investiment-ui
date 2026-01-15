@@ -44,10 +44,18 @@ export const transacoesEndpoints = {
       filterParts.push(`ativoId=${params.ativoId}`)
     }
 
+    // Date range filtering using Gridify comparison operators
+    if (params?.dataInicio) {
+      filterParts.push(`dataTransacao>=${params.dataInicio}`)
+    }
+
+    if (params?.dataFim) {
+      filterParts.push(`dataTransacao<=${params.dataFim}`)
+    }
+
     if (filterParts.length > 0) {
       queryParams.Filter = filterParts.join(',')
     }
-//DataTransacao
     const apiResponse = await ApiClient.get<ApiPaginatedResponse<Transacao>>(
       'transacoes',
       { params: queryParams}
