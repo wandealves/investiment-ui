@@ -168,16 +168,16 @@ const Transacoes = () => {
             )}
             <div className="rounded-lg border bg-card overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b bg-muted/30">
-                      <th className="text-left p-4 text-sm font-semibold">Data</th>
-                      <th className="text-left p-4 text-sm font-semibold">Tipo</th>
-                      <th className="text-left p-4 text-sm font-semibold">Ativo</th>
-                      <th className="text-right p-4 text-sm font-semibold">Quantidade</th>
-                      <th className="text-right p-4 text-sm font-semibold">Preço</th>
-                      <th className="text-right p-4 text-sm font-semibold">Valor Total</th>
-                      <th className="text-right p-4 text-sm font-semibold">Ações</th>
+                <table className="w-full min-w-[700px]">
+                  <thead className="sticky top-0 z-10">
+                    <tr className="border-b bg-muted/50 backdrop-blur-sm">
+                      <th scope="col" className="text-left p-3 sm:p-4 text-xs sm:text-sm font-semibold whitespace-nowrap">Data</th>
+                      <th scope="col" className="text-left p-3 sm:p-4 text-xs sm:text-sm font-semibold whitespace-nowrap">Tipo</th>
+                      <th scope="col" className="text-left p-3 sm:p-4 text-xs sm:text-sm font-semibold whitespace-nowrap">Ativo</th>
+                      <th scope="col" className="text-right p-3 sm:p-4 text-xs sm:text-sm font-semibold whitespace-nowrap">Quantidade</th>
+                      <th scope="col" className="text-right p-3 sm:p-4 text-xs sm:text-sm font-semibold whitespace-nowrap">Preço</th>
+                      <th scope="col" className="text-right p-3 sm:p-4 text-xs sm:text-sm font-semibold whitespace-nowrap">Valor Total</th>
+                      <th scope="col" className="text-right p-3 sm:p-4 text-xs sm:text-sm font-semibold whitespace-nowrap">Ações</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -189,11 +189,11 @@ const Transacoes = () => {
                         transition={{ delay: index * 0.05, duration: 0.3 }}
                         className="group border-b last:border-b-0 transition-all duration-300 hover:bg-gradient-to-r hover:from-primary/5 hover:to-transparent hover:shadow-[inset_3px_0_0_0] hover:shadow-primary"
                       >
-                        <td className="p-4 text-sm">{formatDate(transacao.dataTransacao)}</td>
-                        <td className="p-4">
+                        <td className="p-3 sm:p-4 text-xs sm:text-sm whitespace-nowrap">{formatDate(transacao.dataTransacao)}</td>
+                        <td className="p-3 sm:p-4">
                           <span
                             className={cn(
-                              'px-2 py-1 rounded-full text-xs font-medium transition-all duration-300',
+                              'px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium transition-all duration-300 whitespace-nowrap',
                               transacao.tipoTransacao === 'Compra' &&
                                 'bg-success/10 text-success group-hover:bg-success/20',
                               transacao.tipoTransacao === 'Venda' &&
@@ -211,18 +211,18 @@ const Transacoes = () => {
                             {transacao.tipoTransacao}
                           </span>
                         </td>
-                        <td className="p-4 font-semibold group-hover:text-primary transition-colors duration-300">
+                        <td className="p-3 sm:p-4 font-semibold group-hover:text-primary transition-colors duration-300 whitespace-nowrap">
                           {transacao.ativoCodigo || '-'}
                         </td>
-                        <td className="p-4 text-right font-mono">{transacao.quantidade}</td>
-                        <td className="p-4 text-right font-mono">
+                        <td className="p-3 sm:p-4 text-right font-mono text-xs sm:text-sm">{transacao.quantidade}</td>
+                        <td className="p-3 sm:p-4 text-right font-mono text-xs sm:text-sm whitespace-nowrap">
                           {formatCurrency(transacao.preco)}
                         </td>
-                        <td className="p-4 text-right font-semibold font-mono">
+                        <td className="p-3 sm:p-4 text-right font-semibold font-mono text-xs sm:text-sm whitespace-nowrap">
                           {formatCurrency(transacao.valorTotal)}
                         </td>
-                        <td className="p-4">
-                          <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <td className="p-3 sm:p-4">
+                          <div className="flex items-center justify-end gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
                             <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
                               <Button
                                 variant="ghost"

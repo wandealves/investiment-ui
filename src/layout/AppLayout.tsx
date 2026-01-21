@@ -26,8 +26,9 @@ const AppLayout = () => {
 
         <main
           className={cn(
-            'flex-1 transition-all duration-300 p-8',
-            sidebarOpen ? 'ml-64' : 'ml-0'
+            'flex-1 transition-all duration-300',
+            'p-4 sm:p-6 lg:p-8', // Responsive padding
+            sidebarOpen ? 'ml-[280px] sm:ml-64' : 'ml-0'
           )}
         >
           <Suspense
