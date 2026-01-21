@@ -5,6 +5,22 @@ import { useAuthStore } from '@/store'
 import { LoginDto } from '@/types'
 import { toast } from '@/hooks/useToast'
 
+// Tipo específico para erros de login (API retorna errors como array de strings)
+interface LoginApiError {
+  response?: {
+    data?: {
+      message?: string
+      errors?: string[]
+    }
+    status?: number
+  }
+  message?: string
+}
+
+const getLoginErrorMessage = (error: LoginApiError): string => {
+  return error.response?.data?.errors?.[0] || error.response?.data?.message || error.message || 'Erro ao fazer login'
+}
+
 export const useLogin = () => {
   const navigate = useNavigate()
   const login = useAuthStore((state) => state.login)
@@ -26,10 +42,9 @@ export const useLogin = () => {
         toast.error('Erro: resposta inválida do servidor')
       }
     },
-    onError: (error: any) => {
+    onError: (error: LoginApiError) => {
       console.error('Login error:', error)
-      console.error('Error response:', error.response)
-      toast.error(error.response?.data?.errors?.[0] || error.response?.data?.message || 'Erro ao fazer login')
+      toast.error(getLoginErrorMessage(error))
     },
   })
 }

@@ -5,6 +5,7 @@ import { useTransacoes } from '@/features/transacoes/hooks/useTransacoes'
 import TransacaoFormModal from '@/features/transacoes/components/TransacaoFormModal'
 import TransacaoDeleteDialog from '@/features/transacoes/components/TransacaoDeleteDialog'
 import TransacaoFilters from '@/features/transacoes/components/TransacaoFilters'
+import TransacaoTableSkeleton from '@/features/transacoes/components/TransacaoTableSkeleton'
 import PageHeader from '@/components/common/PageHeader'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import EmptyState from '@/components/common/EmptyState'
@@ -116,10 +117,6 @@ const Transacoes = () => {
     setSelectedTransacao(null)
   }
 
-  if (isLoading) {
-    return <LoadingSpinner />
-  }
-
   return (
     <div className="space-y-6">
       <PageHeader
@@ -146,7 +143,9 @@ const Transacoes = () => {
         onApplyFilters={handleApplyFilters}
       />
 
-      {totalItems === 0 ? (
+      {isLoading ? (
+        <TransacaoTableSkeleton rows={localPageSize} />
+      ) : totalItems === 0 ? (
         <EmptyState
           icon={ArrowLeftRight}
           title={hasActiveFilters ? 'Nenhum resultado encontrado' : 'Nenhuma transação encontrada'}

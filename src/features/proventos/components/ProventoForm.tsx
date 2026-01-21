@@ -1,9 +1,20 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import LoadingSpinner from '@/components/common/LoadingSpinner'
 import AtivoCombobox from '@/components/common/AtivoCombobox'
 import { proventoSchema, type CreateProventoFormData } from '../schemas/proventoSchema'
 import type { Provento } from '@/types/entities.types'
@@ -18,11 +29,12 @@ interface ProventoFormProps {
 
 const ProventoForm = ({ provento, onSubmit, onCancel, isSubmitting }: ProventoFormProps) => {
   const isEditMode = !!provento
+  const [showDiscardDialog, setShowDiscardDialog] = useState(false)
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
     control,
   } = useForm<CreateProventoFormData>({
@@ -205,15 +217,48 @@ const ProventoForm = ({ provento, onSubmit, onCancel, isSubmitting }: ProventoFo
         <Button
           type="button"
           variant="outline"
-          onClick={onCancel}
+          onClick={() => {
+            if (isDirty) {
+              setShowDiscardDialog(true)
+            } else {
+              onCancel()
+            }
+          }}
           disabled={isSubmitting}
         >
           Cancelar
         </Button>
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Salvando...' : isEditMode ? 'Salvar' : 'Criar'}
+          {isSubmitting ? (
+            <>
+              <LoadingSpinner size="sm" className="mr-2" />
+              {isEditMode ? 'Salvando...' : 'Criando...'}
+            </>
+          ) : (
+            <>{isEditMode ? 'Salvar Alterações' : 'Criar Provento'}</>
+          )}
         </Button>
       </div>
+
+      <AlertDialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Descartar alterações?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Você tem alterações não salvas. Tem certeza que deseja descartá-las?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Continuar editando</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={onCancel}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Descartar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </form>
   )
 }

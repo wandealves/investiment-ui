@@ -1,9 +1,19 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { createCarteiraSchema, type CreateCarteiraFormData } from '../schemas/carteiraSchema'
 import type { Carteira } from '@/types/entities.types'
@@ -17,11 +27,12 @@ interface CarteiraFormProps {
 
 const CarteiraForm = ({ carteira, onSubmit, onCancel, isSubmitting }: CarteiraFormProps) => {
   const isEditMode = !!carteira
+  const [showDiscardDialog, setShowDiscardDialog] = useState(false)
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
   } = useForm<CreateCarteiraFormData>({
     resolver: zodResolver(createCarteiraSchema),
@@ -78,7 +89,18 @@ const CarteiraForm = ({ carteira, onSubmit, onCancel, isSubmitting }: CarteiraFo
       </div>
 
       <div className="flex justify-end gap-3 pt-4">
-        <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => {
+            if (isDirty) {
+              setShowDiscardDialog(true)
+            } else {
+              onCancel()
+            }
+          }}
+          disabled={isSubmitting}
+        >
           Cancelar
         </Button>
         <Button type="submit" disabled={isSubmitting}>
@@ -92,6 +114,26 @@ const CarteiraForm = ({ carteira, onSubmit, onCancel, isSubmitting }: CarteiraFo
           )}
         </Button>
       </div>
+
+      <AlertDialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Descartar alterações?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Você tem alterações não salvas. Tem certeza que deseja descartá-las?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Continuar editando</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={onCancel}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Descartar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </form>
   )
 }

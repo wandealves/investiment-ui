@@ -10,6 +10,23 @@ export interface ApiError {
   statusCode: number
 }
 
+// Tipo para erros do Axios com resposta da API
+export interface AxiosApiError {
+  response?: {
+    data?: {
+      message?: string
+      errors?: Record<string, string[]>
+    }
+    status?: number
+  }
+  message?: string
+}
+
+// Helper para extrair mensagem de erro de forma type-safe
+export const getErrorMessage = (error: AxiosApiError, fallback: string): string => {
+  return error.response?.data?.message || error.message || fallback
+}
+
 // Formato real retornado pela API
 export interface ApiPaginatedResponse<T> {
   count: number

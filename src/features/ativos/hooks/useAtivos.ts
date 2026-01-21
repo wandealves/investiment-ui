@@ -3,7 +3,7 @@ import { ativosEndpoints } from '@/api/endpoints/ativos'
 import { queryKeys } from '@/lib/react-query'
 import { toast } from '@/hooks/useToast'
 import { CreateAtivoDto, UpdateAtivoDto } from '@/types'
-import { PaginationParams, AtivoFilterParams } from '@/types/api.types'
+import { PaginationParams, AtivoFilterParams, AxiosApiError, getErrorMessage } from '@/types/api.types'
 
 export const useAtivos = (params?: AtivoFilterParams) => {
   return useQuery({
@@ -34,11 +34,11 @@ export const useCreateAtivo = () => {
   return useMutation({
     mutationFn: (data: CreateAtivoDto) => ativosEndpoints.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ativos'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.ativos.all })
       toast.success('Ativo criado com sucesso!')
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Erro ao criar ativo')
+    onError: (error: AxiosApiError) => {
+      toast.error(getErrorMessage(error, 'Erro ao criar ativo'))
     },
   })
 }
@@ -50,12 +50,12 @@ export const useUpdateAtivo = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateAtivoDto }) =>
       ativosEndpoints.update(id, data),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['ativos'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.ativos.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.ativos.detail(variables.id) })
       toast.success('Ativo atualizado com sucesso!')
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Erro ao atualizar ativo')
+    onError: (error: AxiosApiError) => {
+      toast.error(getErrorMessage(error, 'Erro ao atualizar ativo'))
     },
   })
 }
@@ -66,11 +66,11 @@ export const useDeleteAtivo = () => {
   return useMutation({
     mutationFn: (id: string) => ativosEndpoints.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ativos'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.ativos.all })
       toast.success('Ativo excluído com sucesso!')
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Erro ao excluir ativo')
+    onError: (error: AxiosApiError) => {
+      toast.error(getErrorMessage(error, 'Erro ao excluir ativo'))
     },
   })
 }

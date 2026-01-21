@@ -3,7 +3,7 @@ import { transacoesEndpoints } from '@/api/endpoints/transacoes'
 import { queryKeys } from '@/lib/react-query'
 import { toast } from '@/hooks/useToast'
 import { CreateTransacaoDto, UpdateTransacaoDto } from '@/types'
-import { PaginationParams, TransacaoFilterParams } from '@/types/api.types'
+import { PaginationParams, TransacaoFilterParams, AxiosApiError, getErrorMessage } from '@/types/api.types'
 
 export const useTransacoes = (params?: TransacaoFilterParams) => {
   return useQuery({
@@ -29,13 +29,13 @@ export const useCreateTransacao = () => {
   return useMutation({
     mutationFn: (data: CreateTransacaoDto) => transacoesEndpoints.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['transacoes'] })
-      queryClient.invalidateQueries({ queryKey: ['carteiras'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.transacoes.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.carteiras.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics })
       toast.success('Transação criada com sucesso!')
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Erro ao criar transação')
+    onError: (error: AxiosApiError) => {
+      toast.error(getErrorMessage(error, 'Erro ao criar transação'))
     },
   })
 }
@@ -47,13 +47,13 @@ export const useUpdateTransacao = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateTransacaoDto }) =>
       transacoesEndpoints.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['transacoes'] })
-      queryClient.invalidateQueries({ queryKey: ['carteiras'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.transacoes.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.carteiras.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics })
       toast.success('Transação atualizada com sucesso!')
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Erro ao atualizar transação')
+    onError: (error: AxiosApiError) => {
+      toast.error(getErrorMessage(error, 'Erro ao atualizar transação'))
     },
   })
 }
@@ -64,13 +64,13 @@ export const useDeleteTransacao = () => {
   return useMutation({
     mutationFn: (id: string) => transacoesEndpoints.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['transacoes'] })
-      queryClient.invalidateQueries({ queryKey: ['carteiras'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.transacoes.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.carteiras.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.metrics })
       toast.success('Transação excluída com sucesso!')
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Erro ao excluir transação')
+    onError: (error: AxiosApiError) => {
+      toast.error(getErrorMessage(error, 'Erro ao excluir transação'))
     },
   })
 }

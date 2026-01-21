@@ -1,9 +1,19 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import { createAtivoSchema, type CreateAtivoFormData } from '../schemas/ativoSchema'
 import type { Ativo } from '@/types/entities.types'
@@ -18,11 +28,12 @@ interface AtivoFormProps {
 
 const AtivoForm = ({ ativo, onSubmit, onCancel, isSubmitting }: AtivoFormProps) => {
   const isEditMode = !!ativo
+  const [showDiscardDialog, setShowDiscardDialog] = useState(false)
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
   } = useForm<CreateAtivoFormData>({
     resolver: zodResolver(createAtivoSchema),
@@ -122,7 +133,18 @@ const AtivoForm = ({ ativo, onSubmit, onCancel, isSubmitting }: AtivoFormProps) 
       </div>
 
       <div className="flex justify-end gap-3 pt-4">
-        <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => {
+            if (isDirty) {
+              setShowDiscardDialog(true)
+            } else {
+              onCancel()
+            }
+          }}
+          disabled={isSubmitting}
+        >
           Cancelar
         </Button>
         <Button type="submit" disabled={isSubmitting}>
@@ -136,6 +158,26 @@ const AtivoForm = ({ ativo, onSubmit, onCancel, isSubmitting }: AtivoFormProps) 
           )}
         </Button>
       </div>
+
+      <AlertDialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Descartar alterações?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Você tem alterações não salvas. Tem certeza que deseja descartá-las?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Continuar editando</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={onCancel}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Descartar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </form>
   )
 }

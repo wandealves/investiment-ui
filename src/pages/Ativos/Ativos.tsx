@@ -12,6 +12,7 @@ import AtivoFormModal from '@/features/ativos/components/AtivoFormModal'
 import AtivoDeleteDialog from '@/features/ativos/components/AtivoDeleteDialog'
 import AtivoActions from '@/features/ativos/components/AtivoActions'
 import AtivoFilters from '@/features/ativos/components/AtivoFilters'
+import AtivoTableSkeleton from '@/features/ativos/components/AtivoTableSkeleton'
 import type { Ativo } from '@/types/entities.types'
 import { getTipoAtivoLabel } from '@/utils/tipoAtivoLabels'
 
@@ -131,10 +132,6 @@ const Ativos = () => {
 
   const hasActiveFilters = !!(codigoFilterInput || nomeFilterInput || tipoFilter)
 
-  if (isLoading) {
-    return <LoadingSpinner />
-  }
-
   return (
     <div className="space-y-6">
       <PageHeader
@@ -160,7 +157,9 @@ const Ativos = () => {
         hasActiveFilters={hasActiveFilters}
       />
 
-      {totalItems === 0 ? (
+      {isLoading ? (
+        <AtivoTableSkeleton rows={localPageSize} />
+      ) : totalItems === 0 ? (
         hasActiveFilters ? (
           <div className="rounded-lg border bg-card p-8 text-center">
             <TrendingUp className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />

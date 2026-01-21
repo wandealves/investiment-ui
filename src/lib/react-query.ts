@@ -1,5 +1,6 @@
 import { QueryClient } from '@tanstack/react-query'
 import { PaginationParams, TransacaoFilterParams } from '@/types/api.types'
+import { ProventoFilterParams } from '@/api/endpoints/proventos'
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +35,15 @@ export const queryKeys = {
     byCarteira: (carteiraId: string, params?: PaginationParams) =>
       ['transacoes', 'carteira', carteiraId, params] as const,
     byAtivo: (ativoId: string) => ['transacoes', 'ativo', ativoId] as const,
+  },
+  proventos: {
+    all: ['proventos'] as const,
+    list: (params?: ProventoFilterParams) => ['proventos', 'list', params] as const,
+    detail: (id: number) => ['proventos', 'detail', id] as const,
+    detalhes: (id: number) => ['proventos', 'detalhes', id] as const,
+    agendados: ['proventos', 'agendados'] as const,
+    byAtivo: (ativoId: number) => ['proventos', 'ativo', ativoId] as const,
+    byPeriodo: (inicio: string, fim: string) => ['proventos', 'periodo', inicio, fim] as const,
   },
   relatorios: {
     rentabilidade: (carteiraId?: string) => ['relatorios', 'rentabilidade', carteiraId] as const,

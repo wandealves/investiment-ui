@@ -1,9 +1,19 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import LoadingSpinner from '@/components/common/LoadingSpinner'
 import AtivoCombobox from '@/components/common/AtivoCombobox'
 import { useCarteiras } from '@/features/carteiras/hooks/useCarteiras'
@@ -30,6 +40,7 @@ const tipoTransacaoOptions: TipoTransacao[] = [
 
 const TransacaoForm = ({ transacao, onSubmit, onCancel, isSubmitting }: TransacaoFormProps) => {
   const isEditMode = !!transacao
+  const [showDiscardDialog, setShowDiscardDialog] = useState(false)
 
   // Fetch carteiras for select dropdown
   const { data: carteirasData, isLoading: isLoadingCarteiras } = useCarteiras({ pageSize: 100 })
@@ -39,7 +50,7 @@ const TransacaoForm = ({ transacao, onSubmit, onCancel, isSubmitting }: Transaca
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
     watch,
     control,
@@ -291,7 +302,18 @@ const TransacaoForm = ({ transacao, onSubmit, onCancel, isSubmitting }: Transaca
       </div>
 
       <div className="flex justify-end gap-3 pt-4">
-        <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => {
+            if (isDirty) {
+              setShowDiscardDialog(true)
+            } else {
+              onCancel()
+            }
+          }}
+          disabled={isSubmitting}
+        >
           Cancelar
         </Button>
         <Button type="submit" disabled={isSubmitting}>
@@ -305,6 +327,26 @@ const TransacaoForm = ({ transacao, onSubmit, onCancel, isSubmitting }: Transaca
           )}
         </Button>
       </div>
+
+      <AlertDialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Descartar alterações?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Você tem alterações não salvas. Tem certeza que deseja descartá-las?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Continuar editando</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={onCancel}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Descartar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </form>
   )
 }

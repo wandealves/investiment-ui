@@ -2,7 +2,6 @@ import { Plus, DollarSign } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useProventos } from '@/features/proventos/hooks/useProventos'
 import PageHeader from '@/components/common/PageHeader'
-import LoadingSpinner from '@/components/common/LoadingSpinner'
 import EmptyState from '@/components/common/EmptyState'
 import Pagination from '@/components/common/Pagination'
 import { Button } from '@/components/ui/button'
@@ -11,6 +10,7 @@ import { cn } from '@/lib/utils'
 import ProventoFormModal from '@/features/proventos/components/ProventoFormModal'
 import ProventoDeleteDialog from '@/features/proventos/components/ProventoDeleteDialog'
 import ProventoActions from '@/features/proventos/components/ProventoActions'
+import ProventoTableSkeleton from '@/features/proventos/components/ProventoTableSkeleton'
 import type { Provento } from '@/types/entities.types'
 import { formatCurrency } from '@/utils/formatters'
 import { format } from 'date-fns'
@@ -120,7 +120,7 @@ const Proventos = () => {
 
       <div className="mt-6">
         {isLoading ? (
-          <LoadingSpinner />
+          <ProventoTableSkeleton rows={localPageSize} />
         ) : proventos.length === 0 ? (
           <EmptyState
             icon={DollarSign}
