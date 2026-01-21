@@ -144,6 +144,11 @@ const TransacaoForm = ({ transacao, onSubmit, onCancel, isSubmitting }: Transaca
               onChange={field.onChange}
               disabled={isSubmitting}
               error={errors.ativoId?.message}
+              initialAtivo={transacao?.ativoId && transacao.ativoCodigo ? {
+                id: transacao.ativoId,
+                codigo: transacao.ativoCodigo,
+                nome: transacao.ativoNome || ''
+              } : undefined}
             />
           )}
         />

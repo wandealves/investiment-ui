@@ -5,19 +5,23 @@ import { cn } from '@/lib/utils'
 import { useAtivosLookup } from '@/hooks/useLookups'
 import LoadingSpinner from './LoadingSpinner'
 import type { Ativo } from '@/types/entities.types'
+import { TipoAtivo } from '@/types/entities.types'
 
 interface AtivoComboboxProps {
   value: number
   onChange: (value: number) => void
   disabled?: boolean
   error?: string
+  initialAtivo?: { id: number; codigo: string; nome: string }
 }
 
-const AtivoCombobox = memo(({ value, onChange, disabled, error }: AtivoComboboxProps) => {
+const AtivoCombobox = memo(({ value, onChange, disabled, error, initialAtivo }: AtivoComboboxProps) => {
   const [open, setOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
-  const [selectedAtivoCache, setSelectedAtivoCache] = useState<Ativo | null>(null)
+  const [selectedAtivoCache, setSelectedAtivoCache] = useState<Ativo | null>(
+    initialAtivo ? { ...initialAtivo, tipo: TipoAtivo.Acao, descricao: '' } : null
+  )
   const comboboxRef = useRef<HTMLDivElement>(null)
 
   // Debounce search term
@@ -34,6 +38,13 @@ const AtivoCombobox = memo(({ value, onChange, disabled, error }: AtivoComboboxP
   // Find selected ativo - first try in current list, then use cache
   const selectedAtivo = ativos.find((ativo) => ativo.id === value) ||
     (selectedAtivoCache?.id === value ? selectedAtivoCache : null)
+
+  // Update cache when initialAtivo changes (e.g., editing different transactions)
+  useEffect(() => {
+    if (initialAtivo && initialAtivo.id !== selectedAtivoCache?.id) {
+      setSelectedAtivoCache({ ...initialAtivo, tipo: TipoAtivo.Acao, descricao: '' })
+    }
+  }, [initialAtivo])
 
   // Update cache when a selected ativo is found in the list
   useEffect(() => {
