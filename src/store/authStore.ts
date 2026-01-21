@@ -23,10 +23,6 @@ export const useAuthStore = create<AuthState>()(
       // Login agora só recebe o usuário (token está no cookie httpOnly)
       login: (user) => {
         set({ user, isAuthenticated: true })
-        // Verificar se foi persistido
-        setTimeout(() => {
-          const stored = localStorage.getItem('auth-storage')
-        }, 10)
       },
       // Logout limpa apenas o estado local
       // O cookie será limpo pelo endpoint /auth/logout no backend

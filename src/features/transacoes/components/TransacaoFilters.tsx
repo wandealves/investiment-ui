@@ -28,7 +28,6 @@ interface TransacaoFiltersProps {
   onDataFimChange: (date: string) => void
   onClearFilters: () => void
   onApplyFilters: () => void
-  hasUnappliedChanges: boolean
 }
 
 const TransacaoFilters = ({
@@ -42,7 +41,6 @@ const TransacaoFilters = ({
   onDataFimChange,
   onClearFilters,
   onApplyFilters,
-  hasUnappliedChanges,
 }: TransacaoFiltersProps) => {
   const hasLocalFilters = tipoFilter !== '' || ativoFilter !== 0 || dataInicio !== '' || dataFim !== ''
 
@@ -85,7 +83,6 @@ const TransacaoFilters = ({
             <AtivoCombobox
               value={ativoFilter}
               onChange={onAtivoChange}
-              placeholder="Todos os ativos"
             />
           </div>
         </div>

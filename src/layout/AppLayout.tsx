@@ -32,8 +32,9 @@ const AppLayout = () => {
         >
           <Suspense
             fallback={
-              <div className="flex items-center justify-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+              <div className="flex items-center justify-center h-64" role="status" aria-live="polite">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" aria-hidden="true" />
+                <span className="sr-only">Carregando página...</span>
               </div>
             }
           >

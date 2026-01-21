@@ -129,7 +129,7 @@ const Ativos = () => {
     goToPage(1)
   }, [goToPage])
 
-  const hasActiveFilters = codigoFilterInput || nomeFilterInput || tipoFilter
+  const hasActiveFilters = !!(codigoFilterInput || nomeFilterInput || tipoFilter)
 
   if (isLoading) {
     return <LoadingSpinner />

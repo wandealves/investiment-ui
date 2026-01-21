@@ -25,7 +25,7 @@ const CarteiraFormModal = ({ isOpen, onClose, carteira }: CarteiraFormModalProps
   const handleSubmit = async (data: CreateCarteiraFormData) => {
     try {
       if (isEditMode) {
-        await updateMutation.mutateAsync({ id: carteira.id, data })
+        await updateMutation.mutateAsync({ id: carteira.id.toString(), data })
       } else {
         await createMutation.mutateAsync(data)
       }

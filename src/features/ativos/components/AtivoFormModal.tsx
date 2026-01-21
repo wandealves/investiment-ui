@@ -25,7 +25,7 @@ const AtivoFormModal = ({ isOpen, onClose, ativo }: AtivoFormModalProps) => {
   const handleSubmit = async (data: CreateAtivoFormData) => {
     try {
       if (isEditMode) {
-        await updateMutation.mutateAsync({ id: ativo.id, data })
+        await updateMutation.mutateAsync({ id: ativo.id.toString(), data })
       } else {
         await createMutation.mutateAsync(data)
       }

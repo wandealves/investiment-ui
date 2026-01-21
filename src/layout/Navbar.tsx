@@ -30,6 +30,7 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
           size="icon"
           onClick={onToggleSidebar}
           className="mr-2 hover:bg-primary/10 transition-colors"
+          aria-label="Alternar menu de navegação"
         >
           <Menu className="h-6 w-6" />
         </Button>
@@ -47,10 +48,11 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
             variant="ghost"
             size="icon"
             className="relative hover:bg-primary/10 transition-colors"
+            aria-label="Notificações"
           >
             <Bell className="h-5 w-5" />
             {/* Notification badge */}
-            <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-error animate-pulse" />
+            <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-error animate-pulse" aria-hidden="true" />
           </Button>
 
           <div className="flex items-center gap-2 ml-2 px-3 py-1.5 rounded-md bg-primary/10 border border-primary/20 backdrop-blur-sm">
@@ -63,6 +65,7 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
             size="icon"
             onClick={() => logout()}
             className="hover:bg-destructive/10 hover:text-destructive transition-colors"
+            aria-label="Sair da conta"
           >
             <LogOut className="h-5 w-5" />
           </Button>

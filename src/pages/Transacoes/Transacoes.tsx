@@ -51,13 +51,6 @@ const Transacoes = () => {
   const totalItems = data?.total || 0
   const hasActiveFilters = tipoFilter !== '' || ativoFilter !== 0 || dataInicio !== '' || dataFim !== ''
 
-  // Check if there are unapplied changes
-  const hasUnappliedChanges =
-    localTipoFilter !== tipoFilter ||
-    localAtivoFilter !== ativoFilter ||
-    localDataInicio !== dataInicio ||
-    localDataFim !== dataFim
-
   // Apply filters handler
   const handleApplyFilters = () => {
     setTipoFilter(localTipoFilter)
@@ -151,7 +144,6 @@ const Transacoes = () => {
         onDataFimChange={setLocalDataFim}
         onClearFilters={handleClearFilters}
         onApplyFilters={handleApplyFilters}
-        hasUnappliedChanges={hasUnappliedChanges}
       />
 
       {totalItems === 0 ? (

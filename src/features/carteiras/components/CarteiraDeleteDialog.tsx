@@ -24,7 +24,7 @@ const CarteiraDeleteDialog = ({ isOpen, onClose, carteira }: CarteiraDeleteDialo
     if (!carteira) return
 
     try {
-      await deleteMutation.mutateAsync(carteira.id)
+      await deleteMutation.mutateAsync(carteira.id.toString())
       onClose()
     } catch (error) {
       console.error('Error deleting carteira:', error)
